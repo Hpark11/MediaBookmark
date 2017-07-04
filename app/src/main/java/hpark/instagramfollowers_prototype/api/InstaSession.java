@@ -1,5 +1,8 @@
 package hpark.instagramfollowers_prototype.api;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 /**
  * Created by hpark_ipl on 2017. 7. 4..
  */
@@ -8,7 +11,7 @@ package hpark.instagramfollowers_prototype.api;
 public class InstaSession {
 
     private SharedPreferences sharedPref;
-    private Editor editor;
+    private SharedPreferences.Editor editor;
 
     private static final String SHARED = "Instagram_Preferences";
     private static final String API_USERNAME = "username";
@@ -16,18 +19,11 @@ public class InstaSession {
     private static final String API_NAME = "name";
     private static final String API_ACCESS_TOKEN = "access_token";
 
-    public InstagramSession(Context context) {
+    public InstaSession(Context context) {
         sharedPref = context.getSharedPreferences(SHARED, Context.MODE_PRIVATE);
         editor = sharedPref.edit();
     }
 
-    /**
-     *
-     * @param accessToken
-     * @param expireToken
-     * @param expiresIn
-     * @param username
-     */
     public void storeAccessToken(String accessToken, String id, String username, String name) {
         editor.putString(API_ID, id);
         editor.putString(API_NAME, name);

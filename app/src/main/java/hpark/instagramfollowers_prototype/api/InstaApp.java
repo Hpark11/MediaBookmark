@@ -1,5 +1,7 @@
 package hpark.instagramfollowers_prototype.api;
 
+import android.content.Context;
+
 /**
  * Created by hpark_ipl on 2017. 7. 4..
  */
@@ -10,7 +12,6 @@ public class InstaApp {
     private OAuthAuthenticationListener mListener;
     private ProgressDialog mProgress;
     private String mAuthUrl;
-    private String mTokenUrl;
     private String mAccessToken;
     private Context mCtx;
     private String mClientId;
@@ -20,32 +21,44 @@ public class InstaApp {
     private static int WHAT_FETCH_INFO = 2;
 
     public static String mCallbackUrl = "";
-    private static final String AUTH_URL = "https://api.instagram.com/oauth/authorize/";
-    private static final String TOKEN_URL = "https://api.instagram.com/oauth/access_token";
-    private static final String API_URL = "https://api.instagram.com/v1";
+
     private static final String TAG = "InstagramAPI";
+
+
+
+    private InstaSession session;
+    private static InstaApp instance = new InstaApp();
+    private String authUrl;
+
+
+    public static InstaApp getInstance() {
+        if(instance == null) {
+            instance = new InstaApp();
+        }
+        return instance;
+    }
+
+    private InstaApp() {
+
+    }
+
+    public void setAppContext(Context context) {
+        session = null;
+        session = new InstaSession(context);
+    }
 
     public InstagramApp(Context context, String clientId, String clientSecret, String callbackUrl) {
         mClientId = clientId;
         mClientSecret = clientSecret;
         mCtx = context;
-        mSession = new InstagramSession(context);
+
         mAccessToken = mSession.getAccessToken();
         mCallbackUrl = callbackUrl;
-        mTokenUrl = TOKEN_URL + "?client_id=" + clientId + "&client_secret="
-                + clientSecret + "&redirect_uri=" + mCallbackUrl + "&grant_type=authorization_code";
+
         mAuthUrl = AUTH_URL + "?client_id=" + clientId + "&redirect_uri="
                 + mCallbackUrl + "&response_type=code&display=touch&scope=likes+comments+relationships";
-        OAuthDialogListener listener = new OAuthDialogListener() {
-            @Override
-            public void onComplete(String code) {
-                getAccessToken(code);
-            }
-            @Override
-            public void onError(String error) {
-                mListener.onFail("Authorization failed");
-            }
-        };
+
+
         mDialog = new InstagramDialog(context, mAuthUrl, listener);
         mProgress = new ProgressDialog(context);
         mProgress.setCancelable(false);
@@ -198,5 +211,79 @@ public class InstaApp {
     public interface OAuthAuthenticationListener {
         public abstract void onSuccess();
         public abstract void onFail(String error);
+    }
+
+
+    private class InstaSession {
+
+        private SharedPreferences sharedPref;
+        private Editor editor;
+
+        private static final String SHARED = "Instagram_Preferences";
+        private static final String API_USERNAME = "username";
+        private static final String API_ID = "id";
+        private static final String API_NAME = "name";
+        private static final String API_ACCESS_TOKEN = "access_token";
+
+        public InstaSession(Context context) {
+            sharedPref = context.getSharedPreferences(SHARED, Context.MODE_PRIVATE);
+            editor = sharedPref.edit();
+        }
+
+        public void storeAccessToken(String accessToken, String id, String username, String name) {
+            editor.putString(API_ID, id);
+            editor.putString(API_NAME, name);
+            editor.putString(API_ACCESS_TOKEN, accessToken);
+            editor.putString(API_USERNAME, username);
+            editor.commit();
+        }
+
+        public void storeAccessToken(String accessToken) {
+            editor.putString(API_ACCESS_TOKEN, accessToken);
+            editor.commit();
+        }
+
+        /**
+         * Reset access token and user name
+         */
+        public void resetAccessToken() {
+            editor.putString(API_ID, null);
+            editor.putString(API_NAME, null);
+            editor.putString(API_ACCESS_TOKEN, null);
+            editor.putString(API_USERNAME, null);
+            editor.commit();
+        }
+
+        /**
+         * Get user name
+         *
+         * @return User name
+         */
+        public String getUsername() {
+            return sharedPref.getString(API_USERNAME, null);
+        }
+        /**
+         *
+         * @return
+         */
+        public String getId() {
+            return sharedPref.getString(API_ID, null);
+        }
+        /**
+         *
+         * @return
+         */
+        public String getName() {
+            return sharedPref.getString(API_NAME, null);
+        }
+
+        /**
+         * Get access token
+         *
+         * @return Access token
+         */
+        public String getAccessToken() {
+            return sharedPref.getString(API_ACCESS_TOKEN, null);
+        }
     }
 }
