@@ -53,12 +53,14 @@
             android:id="@+id/button2"
             android:layout_width="120dp"
             android:layout_height="120dp"
+            android:onClick="followingButtonTapped"
             android:text="내가 팔로우한 사람" />
 
         <Button
             android:id="@+id/button"
             android:layout_width="120dp"
             android:layout_height="120dp"
+            android:onClick="followerButtonTapped"
             android:text="나를 팔로잉한 사람" />
     </TableRow>
 
@@ -71,6 +73,7 @@
             android:id="@+id/button4"
             android:layout_width="120dp"
             android:layout_height="120dp"
+            android:onClick="notEachOtherButtonTapped"
             android:text="나는 팔로잉 했는데 맞팔 안한사람" />
 
         <Button

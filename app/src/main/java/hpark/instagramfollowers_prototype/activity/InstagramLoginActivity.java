@@ -100,6 +100,7 @@ public class InstagramLoginActivity extends AppCompatActivity {
         public boolean handleMessage(Message msg) {
             if (msg.what == WHAT_FINALIZE) {
                 Intent intent = new Intent(InstagramLoginActivity.this, UserInfoActivity.class);
+                intent.putExtra("map", userInfo);
                 startActivity(intent);
             } else if (msg.what == WHAT_ERROR) {
                 Toast.makeText(InstagramLoginActivity.this, "Check your network.", Toast.LENGTH_SHORT).show();
