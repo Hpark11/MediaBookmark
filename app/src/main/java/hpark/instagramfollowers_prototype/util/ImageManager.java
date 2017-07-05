@@ -30,18 +30,20 @@ import hpark.instagramfollowers_prototype.R;
 
 public class ImageManager {
 
+    private Map<ImageView, String> imageViews = Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
     ImageCache memoryCache = new ImageCache();
     FileCache fileCache;
-    private Map<ImageView, String> imageViews = Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
     ExecutorService executorService;
-    Handler handler = new Handler();// handler to display images in UI thread
+
+    // handler to display images in UI thread
+    Handler handler = new Handler();
 
     public ImageManager(Context context) {
         fileCache = new FileCache(context);
         executorService = Executors.newFixedThreadPool(5);
     }
 
-    final int stub_id = R.drawable.profile;
+    final int stub_id = R.drawable.placeholder;
 
     public void DisplayImage(String url, ImageView imageView) {
         imageViews.put(imageView, url);
@@ -64,8 +66,9 @@ public class ImageManager {
 
         // from SD cache
         Bitmap b = decodeFile(f);
-        if (b != null)
+        if (b != null) {
             return b;
+        }
 
         // from web
         try {
@@ -77,7 +80,7 @@ public class ImageManager {
             conn.setInstanceFollowRedirects(true);
             InputStream is = conn.getInputStream();
             OutputStream os = new FileOutputStream(f);
-            Utils.CopyStream(is, os);
+            StreamManager.CopyStream(is, os);
             os.close();
             conn.disconnect();
             bitmap = decodeFile(f);
@@ -105,8 +108,7 @@ public class ImageManager {
             int width_tmp = o.outWidth, height_tmp = o.outHeight;
             int scale = 1;
             while (true) {
-                if (width_tmp / 2 < REQUIRED_SIZE
-                        || height_tmp / 2 < REQUIRED_SIZE)
+                if (width_tmp / 2 < REQUIRED_SIZE || height_tmp / 2 < REQUIRED_SIZE)
                     break;
                 width_tmp /= 2;
                 height_tmp /= 2;

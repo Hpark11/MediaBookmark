@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import hpark.instagramfollowers_prototype.R;
+import hpark.instagramfollowers_prototype.adapter.FollowInfoAdapter;
 
 /**
  * Created by hpark_ipl on 2017. 7. 5..
@@ -66,7 +67,7 @@ public class FollowInfoActivity extends AppCompatActivity {
     public static final String TAG_FULL_NAME = "full_name";
 
     private void setImageGridAdapter() {
-        lvRelationShipAllUser.setAdapter(new RelationShipAdapter(context, usersInfo));
+        followInfoListView.setAdapter(new FollowInfoAdapter(context, usersInfo));
     }
 
     private void getAllMediaImages() {

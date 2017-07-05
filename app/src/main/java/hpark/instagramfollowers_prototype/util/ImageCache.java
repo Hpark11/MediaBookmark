@@ -62,7 +62,7 @@ public class ImageCache {
 
     private void checkSize() {
         Log.i(TAG, "cache size="+size+" length="+cache.size());
-        if(size>limit){
+        if(size > limit){
             //least recently accessed item will be the first one iterated
             Iterator<Map.Entry<String, Bitmap>> iter = cache.entrySet().iterator();
             while(iter.hasNext()){

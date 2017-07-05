@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import hpark.instagramfollowers_prototype.R;
+import hpark.instagramfollowers_prototype.activity.FollowInfoActivity;
+import hpark.instagramfollowers_prototype.util.ImageManager;
 
 /**
  * Created by hpark_ipl on 2017. 7. 5..
@@ -21,22 +23,22 @@ public class FollowInfoAdapter extends BaseAdapter {
 
     private ArrayList<HashMap<String, String>> usersInfo;
     private LayoutInflater inflater;
-    private ImageLoader imageLoader;
+    private ImageManager imageManager;
 
     public FollowInfoAdapter(Context context, ArrayList<HashMap<String, String>> usersInfo) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.usersInfo = usersInfo;
-        this.imageLoader = new ImageLoader(context);
+        this.imageManager = new imageManager(context);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = inflater.inflate(R.layout.relationship_inflater, null);
+        View view = inflater.inflate(R.layout.inflator_followinfo, null);
         Holder holder = new Holder();
         holder.ivPhoto = (ImageView) view.findViewById(R.id.ivImage);
         holder.tvFullName = (TextView) view.findViewById(R.id.tvFullName);
-        holder.tvFullName.setText(usersInfo.get(position).get(Relationship.TAG_USERNAME));
-        imageLoader.DisplayImage(usersInfo.get(position).get(Relationship.TAG_PROFILE_PICTURE), holder.ivPhoto);
+        holder.tvFullName.setText(usersInfo.get(position).get(FollowInfoActivity.TAG_USERNAME));
+        imageManager.DisplayImage(usersInfo.get(position).get(FollowInfoActivity.TAG_PROFILE_PICTURE), holder.ivPhoto);
         return view;
     }
 
