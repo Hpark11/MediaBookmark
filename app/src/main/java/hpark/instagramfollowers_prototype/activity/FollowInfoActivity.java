@@ -17,6 +17,7 @@ import java.util.HashMap;
 
 import hpark.instagramfollowers_prototype.R;
 import hpark.instagramfollowers_prototype.adapter.FollowInfoAdapter;
+import hpark.instagramfollowers_prototype.api.HttpRequestManager;
 
 /**
  * Created by hpark_ipl on 2017. 7. 5..
@@ -79,8 +80,8 @@ public class FollowInfoActivity extends AppCompatActivity {
                 int what = WHAT_FINALIZE;
                 try {
                     // URL url = new URL(mTokenUrl + "&code=" + code);
-                    JSONParser jsonParser = new JSONParser();
-                    JSONObject jsonObject = jsonParser.getJSONFromUrlByGet(url);
+                    HttpRequestManager httpRequestManager = new HttpRequestManager();
+                    JSONObject jsonObject = httpRequestManager.acquireJsonwithGetRequest(url);
                     JSONArray data = jsonObject.getJSONArray(TAG_DATA);
                     for (int data_i = 0; data_i < data.length(); data_i++) {
                         HashMap<String, String> hashMap = new HashMap<String, String>();

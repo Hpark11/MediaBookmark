@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,23 +29,25 @@ public class FollowInfoAdapter extends BaseAdapter {
     public FollowInfoAdapter(Context context, ArrayList<HashMap<String, String>> usersInfo) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.usersInfo = usersInfo;
-        this.imageManager = new imageManager(context);
+        this.imageManager = new ImageManager(context);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = inflater.inflate(R.layout.inflator_followinfo, null);
         Holder holder = new Holder();
-        holder.ivPhoto = (ImageView) view.findViewById(R.id.ivImage);
-        holder.tvFullName = (TextView) view.findViewById(R.id.tvFullName);
-        holder.tvFullName.setText(usersInfo.get(position).get(FollowInfoActivity.TAG_USERNAME));
-        imageManager.DisplayImage(usersInfo.get(position).get(FollowInfoActivity.TAG_PROFILE_PICTURE), holder.ivPhoto);
+        holder.userImageView = (ImageView) view.findViewById(R.id.userImageView);
+        holder.userIdTextView = (TextView) view.findViewById(R.id.userIdTextView);
+        holder.followButton = (Button) view.findViewById(R.id.followButton);
+        holder.userIdTextView.setText(usersInfo.get(position).get(FollowInfoActivity.TAG_USERNAME));
+        imageManager.DisplayImage(usersInfo.get(position).get(FollowInfoActivity.TAG_PROFILE_PICTURE), holder.userImageView);
         return view;
     }
 
     private class Holder {
-        private ImageView ivPhoto;
-        private TextView tvFullName;
+        private ImageView userImageView;
+        private TextView userIdTextView;
+        private Button followButton;
     }
 
     @Override
