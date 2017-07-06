@@ -32,16 +32,12 @@ public class UserInfoActivity extends AppCompatActivity {
     }
 
     public void followingButtonTapped(View view) {
-        String url = "https://api.instagram.com/v1/users/"
-                + userInfo.get(Constants.TAG_ID)
-                + "/followed-by?access_token=" + mSession.getAccessToken();
+        String url = "https://api.instagram.com/v1/users/self/follows?access_token=" + mSession.getAccessToken();
         startActivity(new Intent(UserInfoActivity.this, FollowInfoActivity.class).putExtra("userInfo", url));
     }
 
     public void followerButtonTapped(View view) {
-        String url = "https://api.instagram.com/v1/users/"
-                + userInfo.get(Constants.TAG_ID)
-                + "/follows?access_token=" + mSession.getAccessToken();
+        String url = "https://api.instagram.com/v1/users/self/followed-by?access_token=" + mSession.getAccessToken();
         startActivity(new Intent(UserInfoActivity.this, FollowInfoActivity.class).putExtra("userInfo", url));
     }
 

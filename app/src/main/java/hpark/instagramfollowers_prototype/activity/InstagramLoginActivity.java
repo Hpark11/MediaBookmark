@@ -122,7 +122,7 @@ public class InstagramLoginActivity extends AppCompatActivity {
                 + Constants.CLIENT_ID
                 + "&redirect_uri="
                 + Constants.CALLBACK_URL
-                + "&response_type=code&display=touch&scope=likes+comments+relationships";
+                + "&response_type=code&display=touch&scope=basic+public_content+follower_list+comments+relationships+likes";
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
@@ -269,114 +269,4 @@ public class InstagramLoginActivity extends AppCompatActivity {
             progressDialog.dismiss();
         }
     }
-
-
-
-//    private void displayInfoDialogView() {
-//        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
-//        alertDialog.setTitle("Profile Info");
-//        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        View view = inflater.inflate(R.layout.profile_view, null);
-//        alertDialog.setView(view);
-//        ImageView ivProfile = (ImageView) view.findViewById(R.id.ivProfileImage);
-//        TextView tvName = (TextView) view.findViewById(R.id.tvUserName);
-//        TextView tvNoOfFollwers = (TextView) view.findViewById(R.id.tvNoOfFollowers);
-//        TextView tvNoOfFollowing = (TextView) view.findViewById(R.id.tvNoOfFollowing);
-//
-//        new ImageLoader(MainActivity.this).DisplayImage(userInfoHashmap.get(InstagramApp.TAG_PROFILE_PICTURE), ivProfile);
-//
-//        tvName.setText(userInfoHashmap.get(InstagramApp.TAG_USERNAME));
-//        tvNoOfFollowing.setText(userInfoHashmap.get(InstagramApp.TAG_FOLLOWS));
-//        tvNoOfFollwers.setText(userInfoHashmap.get(InstagramApp.TAG_FOLLOWED_BY));
-//        alertDialog.create().show();
-//    }
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//    static final float[] DIMENSIONS_LANDSCAPE = { 460, 260 };
-//    static final float[] DIMENSIONS_PORTRAIT = { 280, 420 };
-//
-//    static final FrameLayout.LayoutParams FILL = new FrameLayout.LayoutParams(
-//            ViewGroup.LayoutParams.FILL_PARENT,
-//            ViewGroup.LayoutParams.FILL_PARENT
-//    );
-//
-//
-//
-//
-//    static final int MARGIN = 4;
-//    static final int PADDING = 2;
-//    private String mUrl;
-//    private ProgressDialog mSpinner;
-//
-//    private LinearLayout mContent;
-//    private TextView mTitle;
-//    private static final String TAG = "Instagram-WebView";
-//
-//    public InstagramDialog(Context context, String url, OAuthDialogListener listener) {
-//        super(context);
-//        mUrl = url;
-//        mListener = listener;
-//    }
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        mSpinner = new ProgressDialog(getContext());
-//        mSpinner.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        mSpinner.setMessage("Loading...");
-//        mContent = new LinearLayout(getContext());
-//        mContent.setOrientation(LinearLayout.VERTICAL);
-//        setUpTitle();
-//        setUpWebView();
-//        Display display = getWindow().getWindowManager().getDefaultDisplay();
-//        final float scale = getContext().getResources().getDisplayMetrics().density;
-//        float[] dimensions = (display.getWidth() < display.getHeight()) ? DIMENSIONS_PORTRAIT : DIMENSIONS_LANDSCAPE;
-//        addContentView(mContent, new FrameLayout.LayoutParams( (int) (dimensions[0] * scale + 0.5f), (int) (dimensions[1] * scale + 0.5f)));
-//        CookieSyncManager.createInstance(getContext());
-//        CookieManager cookieManager = CookieManager.getInstance();
-//        cookieManager.removeAllCookie();
-//    }
-//
-//    private void setUpTitle() {
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        mTitle = new TextView(getContext());
-//        mTitle.setText("Instagram");
-//        mTitle.setTextColor(Color.WHITE);
-//        mTitle.setTypeface(Typeface.DEFAULT_BOLD);
-//        mTitle.setBackgroundColor(Color.BLACK);
-//        mTitle.setPadding(MARGIN + PADDING, MARGIN, MARGIN, MARGIN);
-//        mContent.addView(mTitle);
-//    }
-
-
-
-
 }
