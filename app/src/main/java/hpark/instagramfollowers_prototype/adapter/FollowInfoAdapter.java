@@ -40,7 +40,7 @@ public class FollowInfoAdapter extends BaseAdapter {
         holder.userIdTextView = (TextView) view.findViewById(R.id.userIdTextView);
         holder.followButton = (Button) view.findViewById(R.id.followButton);
         holder.userIdTextView.setText(usersInfo.get(position).get(FollowInfoActivity.TAG_USERNAME));
-        imageManager.DisplayImage(usersInfo.get(position).get(FollowInfoActivity.TAG_PROFILE_PICTURE), holder.userImageView);
+        imageManager.displayImage(usersInfo.get(position).get(FollowInfoActivity.TAG_PROFILE_PICTURE), holder.userImageView);
         return view;
     }
 

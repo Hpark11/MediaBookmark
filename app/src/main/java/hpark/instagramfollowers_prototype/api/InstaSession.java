@@ -48,34 +48,18 @@ public class InstaSession {
         editor.commit();
     }
 
-    /**
-     * Get user name
-     *
-     * @return User name
-     */
     public String getUsername() {
         return sharedPref.getString(API_USERNAME, null);
     }
-    /**
-     *
-     * @return
-     */
+
     public String getId() {
         return sharedPref.getString(API_ID, null);
     }
-    /**
-     *
-     * @return
-     */
+
     public String getName() {
         return sharedPref.getString(API_NAME, null);
     }
 
-    /**
-     * Get access token
-     *
-     * @return Access token
-     */
     public String getAccessToken() {
         return sharedPref.getString(API_ACCESS_TOKEN, null);
     }

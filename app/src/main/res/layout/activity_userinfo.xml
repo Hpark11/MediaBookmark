@@ -12,11 +12,11 @@ android:padding="5dp">
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/userImageView"
             android:layout_width="160dp"
             android:layout_height="160dp"
-            android:padding="20dp"
             android:layout_weight="1"
+            android:padding="20dp"
             app:srcCompat="@drawable/placeholder" />
 
 
@@ -27,23 +27,23 @@ android:padding="5dp">
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/usernameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="UserName"
-                android:gravity="bottom|center_horizontal"
-                android:textSize="24sp"
                 android:layout_marginTop="5dp"
-                />
+                android:layout_weight="1"
+                android:gravity="bottom|center_horizontal"
+                android:text="UserName"
+                android:textSize="24sp" />
 
             <TextView
+                android:id="@+id/followInfoTextView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="팔로워 : 00, 팔로잉 : 00"
-                android:gravity="top|center_horizontal"
                 android:layout_marginTop="5dp"
-                />
+                android:layout_weight="1"
+                android:gravity="top|center_horizontal"
+                android:text="팔로워 : 000, 팔로잉 : 000" />
         </LinearLayout>
 
     </LinearLayout>
@@ -63,18 +63,20 @@ android:padding="5dp">
             android:layout_weight="1">
 
             <Button
-                android:id="@+id/button8"
+                android:id="@+id/eachOtherButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Button"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:onClick="eachOtherButtonTapped"
+                android:text="서로 팔로우" />
 
             <Button
-                android:id="@+id/button7"
+                android:id="@+id/onlyFollowedByButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Button"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:onClick="onlyFollowedByButtonTapped"
+                android:text="상대만 나를 팔로우" />
         </LinearLayout>
 
         <LinearLayout
@@ -84,18 +86,20 @@ android:padding="5dp">
             android:layout_weight="1">
 
             <Button
-                android:id="@+id/button10"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Button"
-                android:layout_weight="1"/>
-
-            <Button
-                android:id="@+id/button9"
+                android:id="@+id/unfollowButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Button" />
+                android:onClick="unfollowButtonTapped"
+                android:text="나를 언팔로우" />
+
+            <Button
+                android:id="@+id/blockmeButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="blockmeButtonTapped"
+                android:text="나를 블락한" />
         </LinearLayout>
 
     </LinearLayout>
@@ -104,6 +108,6 @@ android:padding="5dp">
         android:id="@+id/button6"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:text="Button" />
+        android:text="광고" />
 
 </LinearLayout>

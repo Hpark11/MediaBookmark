@@ -7,7 +7,8 @@ package hpark.instagramfollowers_prototype.util;
 public class Constants {
     public static final String CLIENT_ID = "2215af72dd21409e84805929a16c4da1";
     public static final String CLIENT_SECRET = "7d7811d63ae04ddd8a4da722005bac6e";
-    public static final String CALLBACK_URL = "http://www.google.com";//instagram://connect";//http://www.google.com";//"instagram://connect";
+    public static final String CALLBACK_URL = "http://www.google.com";
+    //instagram://connect";//http://www.google.com";//"instagram://connect";
 
     public static final String AUTH_URL = "https://api.instagram.com/oauth/authorize/";
     public static final String TOKEN_URL = "https://api.instagram.com/oauth/access_token";
@@ -26,4 +27,22 @@ public class Constants {
     public static final String TAG_FULL_NAME = "full_name";
     public static final String TAG_META = "meta";
     public static final String TAG_CODE = "code";
+
+    public static final String TAG_OUTGOING_STATUS = "outgoing_status";
+    public static final String TAG_INCOMING_STATUS = "incoming_status";
+
+    public static final String STATUS_FOLLOWS = "follows";
+    public static final String STATUS_REQUESTED = "requested";
+    public static final String STATUS_NONE = "none";
+    public static final String STATUS_FOLLOWED_BY = "followed_by";
+    public static final String STATUS_REQUESTED_BY = "requested_by";
+    public static final String STATUS_BLOCKED_BY_YOU = "blocked_by_you";
+
+    public static final int REL_EACH_OTHER = 5;
+    public static final int REL_UNFOLLOWED_BY = 6;
+    public static final int REL_ONLY_FOLLOWED_BY = 7;
+    public static final int REL_BLOCKED_BY = 8;
+
+    public static int WHAT_FINALIZE = 0;
+    public static int WHAT_ERROR = 1;
 }

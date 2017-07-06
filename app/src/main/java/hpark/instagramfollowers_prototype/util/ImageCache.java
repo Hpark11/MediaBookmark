@@ -23,7 +23,7 @@ public class ImageCache {
     private long size=0;
 
     //max memory in bytes
-    private long limit=1000000;
+    private long limit = 1000000;
 
     public ImageCache(){
         //use 25% of available heap size
@@ -65,7 +65,7 @@ public class ImageCache {
         if(size > limit){
             //least recently accessed item will be the first one iterated
             Iterator<Map.Entry<String, Bitmap>> iter = cache.entrySet().iterator();
-            while(iter.hasNext()){
+            while (iter.hasNext()) {
                 Map.Entry<String, Bitmap> entry=iter.next();
                 size-=getSizeInBytes(entry.getValue());
                 iter.remove();

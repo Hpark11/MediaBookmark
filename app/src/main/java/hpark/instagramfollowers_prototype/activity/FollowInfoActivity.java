@@ -41,8 +41,7 @@ public class FollowInfoActivity extends AppCompatActivity {
 
     private ArrayList<HashMap<String, String>> usersInfo = new ArrayList<HashMap<String, String>>();
     private Context context;
-    private int WHAT_FINALIZE = 0;
-    private static int WHAT_ERROR = 1;
+
     private ProgressDialog pd;
 
     private Handler handler = new Handler(new Handler.Callback() {
@@ -92,25 +91,27 @@ public class FollowInfoActivity extends AppCompatActivity {
 
                         // String str_username =
                         // data_obj.getString(TAG_USERNAME);
-                        //
                         // String str_bio = data_obj.getString(TAG_BIO);
-                        //
                         // String str_website = data_obj.getString(TAG_WEBSITE);
 
-                        hashMap.put(TAG_USERNAME,
-                                data_obj.getString(TAG_USERNAME));
+                        hashMap.put(TAG_USERNAME, data_obj.getString(TAG_USERNAME));
                         usersInfo.add(hashMap);
                     }
-                    System.out.println("jsonObject::" + jsonObject);
 
                 } catch (Exception exception) {
                     exception.printStackTrace();
                     what = WHAT_ERROR;
                 }
-                // pd.dismiss();
                 handler.sendEmptyMessage(what);
             }
         }).start();
     }
+
+
+
+
+
+
+
 
 }
