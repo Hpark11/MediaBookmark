@@ -52,6 +52,9 @@ public class UserInfoActivity extends AppCompatActivity {
     Button unfollowedButton;
     Button blockmeButton;
 
+    private final static int FOLLOWS = 1;
+    private final static int FOLLOWED = 1;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,8 +81,8 @@ public class UserInfoActivity extends AppCompatActivity {
 
         String urlFollows = "https://api.instagram.com/v1/users/self/follows?access_token=" + mSession.getAccessToken();
         String urlFollowers = "https://api.instagram.com/v1/users/self/followed-by?access_token=" + mSession.getAccessToken();
-        fetchAllFollowInfo(urlFollows, followingHandler);
-        fetchAllFollowInfo(urlFollowers, followingHandler);
+        fetchAllFollowInfo(urlFollows, followingHandler, FOLLOWS);
+        fetchAllFollowInfo(urlFollowers, followingHandler, FOLLOWED);
     }
 
     @Override
@@ -154,7 +157,11 @@ public class UserInfoActivity extends AppCompatActivity {
         @Override
         public boolean handleMessage(Message msg) {
             if (msg.what == Constants.WHAT_FINALIZE) {
-                queryUserRelationShipAndClassifyUsers(usersInfo);
+                if(msg.arg1 == FOLLOWS) {
+                    queryUserRelationShipAndClassifyUsers(usersInfo, FOLLOWS);
+                } else if(msg.arg1 == FOLLOWED) {
+                    queryUserRelationShipAndClassifyUsers(followersInfo, FOLLOWED);
+                }
             } else if (msg.what == Constants.WHAT_ERROR) {
                 Toast.makeText(UserInfoActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
             }
@@ -162,7 +169,7 @@ public class UserInfoActivity extends AppCompatActivity {
         }
     });
 
-    private void fetchAllFollowInfo(final String url, final Handler handler) {
+    private void fetchAllFollowInfo(final String url, final Handler handler, final int identifier) {
         //progressDialog = ProgressDialog.show(this, "로딩 중", "Loading...");
 
         new Thread(new Runnable() {
@@ -183,14 +190,23 @@ public class UserInfoActivity extends AppCompatActivity {
                         hashMap.put(Constants.TAG_PROFILE_PICTURE, data_obj.getString(Constants.TAG_PROFILE_PICTURE));
                         hashMap.put(Constants.TAG_USERNAME, data_obj.getString(Constants.TAG_USERNAME));
 
-                        usersInfo.add(hashMap);
+                        if(identifier == FOLLOWS) {
+                            usersInfo.add(hashMap);
+                        } else if(identifier == FOLLOWED) {
+                            followersInfo.add(hashMap);
+                        }
                     }
 
                 } catch (Exception exception) {
                     exception.printStackTrace();
                     what = Constants.WHAT_ERROR;
                 }
-                handler.sendEmptyMessage(what);
+
+                if(identifier == FOLLOWS) {
+                    handler.sendMessage(handler.obtainMessage(what, FOLLOWS, 0));
+                } else if(identifier == FOLLOWED) {
+                    handler.sendMessage(handler.obtainMessage(what, FOLLOWED, 0));
+                }
             }
         }).start();
     }
@@ -200,30 +216,48 @@ public class UserInfoActivity extends AppCompatActivity {
         public boolean handleMessage(Message msg) {
             Bundle bundle = msg.getData();
             final int what = bundle.getInt("what", 0);
+            final int identifier = bundle.getInt("identifier", 0);
             final int[] msgData = bundle.getIntArray("msgData");
 
             if (what == Constants.WHAT_FINALIZE) {
-                for (int i = 0; i < msgData.length; i++) {
-                    switch (msgData[i]) {
-                        case Constants.REL_EACH_OTHER:
-                            eachOtherUsersInfo.add(usersInfo.get(i));
-                            break;
-                        case Constants.REL_UNFOLLOWED_BY:
-                            unfollowedByUsersInfo.add(usersInfo.get(i));
-                            break;
-                        default:
-                            break;
+
+                if(identifier == FOLLOWS) {
+                    for (int i = 0; i < msgData.length; i++) {
+                        switch (msgData[i]) {
+                            case Constants.REL_EACH_OTHER:
+                                eachOtherUsersInfo.add(usersInfo.get(i));
+                                break;
+                            case Constants.REL_UNFOLLOWED_BY:
+                                unfollowedByUsersInfo.add(usersInfo.get(i));
+                                break;
+                            default:
+                                break;
+                        }
                     }
+
+                    eachOtherButton.setText("서로 팔로우\n" + eachOtherUsersInfo.size());
+                    unfollowedButton.setText("나를 언팔로우\n" + unfollowedByUsersInfo.size());
+                } else if(identifier == FOLLOWED) {
+                    for (int i = 0; i < msgData.length; i++) {
+                        switch (msgData[i]) {
+                            case Constants.REL_ONLY_FOLLOWED_BY:
+                                onlyFollowedByUsersInfo.add(usersInfo.get(i));
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+                    eachOtherButton.setText("서로 팔로우\n" + eachOtherUsersInfo.size());
+                    unfollowedButton.setText("나를 언팔로우\n" + unfollowedByUsersInfo.size());
                 }
             }
 
-            eachOtherButton.setText("서로 팔로우\n" + eachOtherUsersInfo.size());
-            unfollowedButton.setText("나를 언팔로우\n" + unfollowedByUsersInfo.size());
             return false;
         }
     });
 
-    private void queryUserRelationShipAndClassifyUsers(final ArrayList<HashMap<String, String>> usersInfo) {
+    private void queryUserRelationShipAndClassifyUsers(final ArrayList<HashMap<String, String>> usersInfo, final int identifier) {
 
         new Thread(new Runnable() {
             @Override
@@ -241,17 +275,29 @@ public class UserInfoActivity extends AppCompatActivity {
 
                         JSONObject jsonObject = httpRequestManager.acquireJsonwithGetRequest(url);
                         JSONObject data = jsonObject.getJSONObject(Constants.TAG_DATA);
-                        String incomingStatus = data.getString(Constants.TAG_INCOMING_STATUS);
 
-                        switch (incomingStatus) {
-                            case Constants.STATUS_FOLLOWED_BY:
-                                msgData[i] = Constants.REL_EACH_OTHER;
-                                break;
-                            case Constants.STATUS_NONE:
-                                msgData[i] = Constants.REL_UNFOLLOWED_BY;
-                                break;
-                            default:
-                                break;
+
+                        if (identifier == FOLLOWS) {
+                            String incomingStatus = data.getString(Constants.TAG_INCOMING_STATUS);
+                            switch (incomingStatus) {
+                                case Constants.STATUS_FOLLOWED_BY:
+                                    msgData[i] = Constants.REL_EACH_OTHER;
+                                    break;
+                                case Constants.STATUS_NONE:
+                                    msgData[i] = Constants.REL_UNFOLLOWED_BY;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        } else if(identifier == FOLLOWED) {
+                            String outgoingStatus = data.getString(Constants.TAG_OUTGOING_STATUS);
+                            switch (outgoingStatus) {
+                                case Constants.STATUS_NONE:
+                                    msgData[i] = Constants.REL_ONLY_FOLLOWED_BY;
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
                     }
 
@@ -263,14 +309,12 @@ public class UserInfoActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putIntArray("msgData", msgData);
                 bundle.putInt("what", what);
+                bundle.putInt("identifier", identifier);
                 Message message = new Message();
                 message.setData(bundle);
                 classifyUsersHandler.sendMessage(message);
             }
         }).start();
     }
-
-
-
 
 }
