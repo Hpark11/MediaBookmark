@@ -53,7 +53,7 @@ public class UserInfoActivity extends AppCompatActivity {
     Button blockmeButton;
 
     private final static int FOLLOWS = 1;
-    private final static int FOLLOWED = 1;
+    private final static int FOLLOWED = 2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,16 +78,7 @@ public class UserInfoActivity extends AppCompatActivity {
         usernameTextView.setText(userInfo.get(Constants.TAG_USERNAME));
         followInfoTextView.setText("팔로워 : " + userInfo.get(Constants.TAG_FOLLOWED_BY) + ", 팔로잉 : " + userInfo.get(Constants.TAG_FOLLOWS));
 
-
-        String urlFollows = "https://api.instagram.com/v1/users/self/follows?access_token=" + mSession.getAccessToken();
-        String urlFollowers = "https://api.instagram.com/v1/users/self/followed-by?access_token=" + mSession.getAccessToken();
-        fetchAllFollowInfo(urlFollows, followingHandler, FOLLOWS);
-        fetchAllFollowInfo(urlFollowers, followingHandler, FOLLOWED);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
+        refreshUserInfo();
     }
 
     public void followerButtonTapped(View view) {
@@ -104,6 +95,13 @@ public class UserInfoActivity extends AppCompatActivity {
 
     }
 
+    public void refreshUserInfo() {
+        String urlFollows = "https://api.instagram.com/v1/users/self/follows?access_token=" + mSession.getAccessToken();
+        String urlFollowers = "https://api.instagram.com/v1/users/self/followed-by?access_token=" + mSession.getAccessToken();
+        fetchAllFollowInfo(urlFollows, followingHandler, FOLLOWS);
+        fetchAllFollowInfo(urlFollowers, followingHandler, FOLLOWED);
+    }
+
     public void eachOtherButtonTapped(View view) {
         startActivity(new Intent(UserInfoActivity.this, FollowInfoActivity.class).putExtra("usersInfo", eachOtherUsersInfo));
     }
@@ -117,41 +115,9 @@ public class UserInfoActivity extends AppCompatActivity {
     }
 
     public void onlyFollowedByButtonTapped(View view) {
-        startActivity(new Intent(UserInfoActivity.this, FollowInfoActivity.class).putExtra("usersInfo", eachOtherUsersInfo));
+        startActivity(new Intent(UserInfoActivity.this, FollowInfoActivity.class).putExtra("usersInfo", onlyFollowedByUsersInfo));
     }
 
-//    public void loginButtonTapped(View view) {
-//        Intent intent = new Intent(UserInfoActivity.this, InstagramLoginActivity.class);
-//        startActivity(intent);
-//    }
-
-//    private Handler followeByHandler = new Handler(new Handler.Callback() {
-//        @Override
-//        public boolean handleMessage(Message msg) {
-//            if (pd != null && pd.isShowing())
-//                pd.dismiss();
-//            if (msg.what == Constants.WHAT_FINALIZE) {
-//                setImageGridAdapter();
-//            } else {
-//                Toast.makeText(context, "Check your network.", Toast.LENGTH_SHORT).show();
-//            }
-//            return false;
-//        }
-//    });
-
-//    private Handler followingHandler = new Handler(new Handler.Callback() {
-//        @Override
-//        public boolean handleMessage(Message msg) {
-//            if (pd != null && pd.isShowing())
-//                pd.dismiss();
-//            if (msg.what == Constants.WHAT_FINALIZE) {
-//                setImageGridAdapter();
-//            } else {
-//                Toast.makeText(context, "Check your network.", Toast.LENGTH_SHORT).show();
-//            }
-//            return false;
-//        }
-//    });
 
     private Handler followingHandler = new Handler(new Handler.Callback() {
         @Override
@@ -241,15 +207,14 @@ public class UserInfoActivity extends AppCompatActivity {
                     for (int i = 0; i < msgData.length; i++) {
                         switch (msgData[i]) {
                             case Constants.REL_ONLY_FOLLOWED_BY:
-                                onlyFollowedByUsersInfo.add(usersInfo.get(i));
+                                onlyFollowedByUsersInfo.add(followersInfo.get(i));
                                 break;
                             default:
                                 break;
                         }
                     }
 
-                    eachOtherButton.setText("서로 팔로우\n" + eachOtherUsersInfo.size());
-                    unfollowedButton.setText("나를 언팔로우\n" + unfollowedByUsersInfo.size());
+                    onlyFollowedByButton.setText("상대만 나를 팔로우\n" + onlyFollowedByUsersInfo.size());
                 }
             }
 
