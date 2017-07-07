@@ -7,8 +7,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -43,6 +45,12 @@ public class UserInfoActivity extends AppCompatActivity {
     private ArrayList<HashMap<String, String>> blockedByUsersInfo = new ArrayList<HashMap<String, String>>();
 
     private ArrayList<HashMap<String, String>> usersInfo = new ArrayList<HashMap<String, String>>();
+    private ArrayList<HashMap<String, String>> followersInfo = new ArrayList<HashMap<String, String>>();
+
+    Button eachOtherButton;
+    Button onlyFollowedByButton;
+    Button unfollowedButton;
+    Button blockmeButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,24 +64,32 @@ public class UserInfoActivity extends AppCompatActivity {
         userImageView = (ImageView) findViewById(R.id.userImageView);
         usernameTextView = (TextView) findViewById(R.id.usernameTextView);
         followInfoTextView = (TextView) findViewById(R.id.followInfoTextView);
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+        eachOtherButton = (Button) findViewById(R.id.eachOtherButton);
+        onlyFollowedByButton = (Button) findViewById(R.id.onlyFollowedByButton);
+        unfollowedButton = (Button) findViewById(R.id.unfollowButton);
+        blockmeButton = (Button) findViewById(R.id.blockmeButton);
 
         final ImageManager imageManager = new ImageManager(this);
         imageManager.displayImage(userInfo.get(Constants.TAG_PROFILE_PICTURE), userImageView);
         usernameTextView.setText(userInfo.get(Constants.TAG_USERNAME));
         followInfoTextView.setText("팔로워 : " + userInfo.get(Constants.TAG_FOLLOWED_BY) + ", 팔로잉 : " + userInfo.get(Constants.TAG_FOLLOWS));
 
-        String url = "https://api.instagram.com/v1/users/self/follows?access_token=" + mSession.getAccessToken();
-        fetchAllFollowInfo(url, followingHandler);
+
+        String urlFollows = "https://api.instagram.com/v1/users/self/follows?access_token=" + mSession.getAccessToken();
+        String urlFollowers = "https://api.instagram.com/v1/users/self/followed-by?access_token=" + mSession.getAccessToken();
+        fetchAllFollowInfo(urlFollows, followingHandler);
+        fetchAllFollowInfo(urlFollowers, followingHandler);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     public void followerButtonTapped(View view) {
         final String url = "https://api.instagram.com/v1/users/self/followed-by?access_token=" + mSession.getAccessToken();
-        startActivity(new Intent(UserInfoActivity.this, FollowInfoActivity.class).putExtra("userInfo", url));
+        startActivity(new Intent(UserInfoActivity.this, FollowInfoActivity.class).putExtra("usersInfo", url));
     }
 
     public void followingButtonTapped(View view) {
@@ -86,19 +102,19 @@ public class UserInfoActivity extends AppCompatActivity {
     }
 
     public void eachOtherButtonTapped(View view) {
-
+        startActivity(new Intent(UserInfoActivity.this, FollowInfoActivity.class).putExtra("usersInfo", eachOtherUsersInfo));
     }
 
     public void blockmeButtonTapped(View view) {
-
+        startActivity(new Intent(UserInfoActivity.this, FollowInfoActivity.class).putExtra("usersInfo", unfollowedByUsersInfo));
     }
 
     public void unfollowButtonTapped(View view) {
-
+        startActivity(new Intent(UserInfoActivity.this, FollowInfoActivity.class).putExtra("usersInfo", unfollowedByUsersInfo));
     }
 
     public void onlyFollowedByButtonTapped(View view) {
-
+        startActivity(new Intent(UserInfoActivity.this, FollowInfoActivity.class).putExtra("usersInfo", eachOtherUsersInfo));
     }
 
 //    public void loginButtonTapped(View view) {
@@ -139,6 +155,8 @@ public class UserInfoActivity extends AppCompatActivity {
         public boolean handleMessage(Message msg) {
             if (msg.what == Constants.WHAT_FINALIZE) {
                 queryUserRelationShipAndClassifyUsers(usersInfo);
+            } else if (msg.what == Constants.WHAT_ERROR) {
+                Toast.makeText(UserInfoActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
             }
             return false;
         }
@@ -198,6 +216,9 @@ public class UserInfoActivity extends AppCompatActivity {
                     }
                 }
             }
+
+            eachOtherButton.setText("서로 팔로우\n" + eachOtherUsersInfo.size());
+            unfollowedButton.setText("나를 언팔로우\n" + unfollowedByUsersInfo.size());
             return false;
         }
     });

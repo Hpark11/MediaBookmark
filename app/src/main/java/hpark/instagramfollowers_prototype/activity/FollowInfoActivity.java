@@ -32,12 +32,12 @@ public class FollowInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_follow);
         followInfoListView = (ListView) findViewById(R.id.followInfoListView);
 
-        url = getIntent().getStringExtra("userInfo");
+        usersInfo = (ArrayList<HashMap<String, String>>)getIntent().getSerializableExtra("usersInfo");
         context = FollowInfoActivity.this;
+        setImageGridAdapter();
         //getAllMediaImages();
     }
 
-    private String url = "";
 
     private ArrayList<HashMap<String, String>> usersInfo = new ArrayList<HashMap<String, String>>();
     private Context context;

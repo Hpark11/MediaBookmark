@@ -103,7 +103,7 @@ public class InstagramLoginActivity extends AppCompatActivity {
                 intent.putExtra("map", userInfo);
                 startActivity(intent);
             } else if (msg.what == WHAT_ERROR) {
-                Toast.makeText(InstagramLoginActivity.this, "Check your network.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(InstagramLoginActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
             }
             return false;
         }
