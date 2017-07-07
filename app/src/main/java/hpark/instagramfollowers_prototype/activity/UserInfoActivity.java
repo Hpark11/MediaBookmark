@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -67,6 +66,9 @@ public class UserInfoActivity extends AppCompatActivity {
         imageManager.displayImage(userInfo.get(Constants.TAG_PROFILE_PICTURE), userImageView);
         usernameTextView.setText(userInfo.get(Constants.TAG_USERNAME));
         followInfoTextView.setText("팔로워 : " + userInfo.get(Constants.TAG_FOLLOWED_BY) + ", 팔로잉 : " + userInfo.get(Constants.TAG_FOLLOWS));
+
+        String url = "https://api.instagram.com/v1/users/self/follows?access_token=" + mSession.getAccessToken();
+        fetchAllFollowInfo(url, followingHandler);
     }
 
     public void followerButtonTapped(View view) {
@@ -104,19 +106,19 @@ public class UserInfoActivity extends AppCompatActivity {
 //        startActivity(intent);
 //    }
 
-    private Handler followeByHandler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            if (pd != null && pd.isShowing())
-                pd.dismiss();
-            if (msg.what == Constants.WHAT_FINALIZE) {
-                setImageGridAdapter();
-            } else {
-                Toast.makeText(context, "Check your network.", Toast.LENGTH_SHORT).show();
-            }
-            return false;
-        }
-    });
+//    private Handler followeByHandler = new Handler(new Handler.Callback() {
+//        @Override
+//        public boolean handleMessage(Message msg) {
+//            if (pd != null && pd.isShowing())
+//                pd.dismiss();
+//            if (msg.what == Constants.WHAT_FINALIZE) {
+//                setImageGridAdapter();
+//            } else {
+//                Toast.makeText(context, "Check your network.", Toast.LENGTH_SHORT).show();
+//            }
+//            return false;
+//        }
+//    });
 
 //    private Handler followingHandler = new Handler(new Handler.Callback() {
 //        @Override
@@ -142,16 +144,8 @@ public class UserInfoActivity extends AppCompatActivity {
         }
     });
 
-    private Handler classifyUsersHandler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-
-            return false;
-        }
-    });
-
     private void fetchAllFollowInfo(final String url, final Handler handler) {
-        progressDialog = ProgressDialog.show(this, "로딩 중", "Loading...");
+        //progressDialog = ProgressDialog.show(this, "로딩 중", "Loading...");
 
         new Thread(new Runnable() {
             @Override
@@ -183,7 +177,30 @@ public class UserInfoActivity extends AppCompatActivity {
         }).start();
     }
 
+    private Handler classifyUsersHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            Bundle bundle = msg.getData();
+            final int what = bundle.getInt("what", 0);
+            final int[] msgData = bundle.getIntArray("msgData");
 
+            if (what == Constants.WHAT_FINALIZE) {
+                for (int i = 0; i < msgData.length; i++) {
+                    switch (msgData[i]) {
+                        case Constants.REL_EACH_OTHER:
+                            eachOtherUsersInfo.add(usersInfo.get(i));
+                            break;
+                        case Constants.REL_UNFOLLOWED_BY:
+                            unfollowedByUsersInfo.add(usersInfo.get(i));
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            return false;
+        }
+    });
 
     private void queryUserRelationShipAndClassifyUsers(final ArrayList<HashMap<String, String>> usersInfo) {
 
@@ -192,8 +209,8 @@ public class UserInfoActivity extends AppCompatActivity {
             public void run() {
                 int[] msgData = new int[usersInfo.size()];
                 int what = Constants.WHAT_FINALIZE;
-
                 try {
+                    HttpRequestManager httpRequestManager = new HttpRequestManager();
 
                     for (int i = 0; i < usersInfo.size(); i++) {
                         final String url = "https://api.instagram.com/v1/users/"
@@ -201,10 +218,8 @@ public class UserInfoActivity extends AppCompatActivity {
                                 + "/relationship?access_token="
                                 + mSession.getAccessToken();
 
-                        HttpRequestManager httpRequestManager = new HttpRequestManager();
                         JSONObject jsonObject = httpRequestManager.acquireJsonwithGetRequest(url);
                         JSONObject data = jsonObject.getJSONObject(Constants.TAG_DATA);
-
                         String incomingStatus = data.getString(Constants.TAG_INCOMING_STATUS);
 
                         switch (incomingStatus) {
@@ -212,7 +227,7 @@ public class UserInfoActivity extends AppCompatActivity {
                                 msgData[i] = Constants.REL_EACH_OTHER;
                                 break;
                             case Constants.STATUS_NONE:
-                                msgData[i] = Constants.REL_UNFOLLOWED_BY
+                                msgData[i] = Constants.REL_UNFOLLOWED_BY;
                                 break;
                             default:
                                 break;
@@ -225,12 +240,13 @@ public class UserInfoActivity extends AppCompatActivity {
                 }
 
                 Bundle bundle = new Bundle();
-                bundle.putIntArray("", msgData);
+                bundle.putIntArray("msgData", msgData);
+                bundle.putInt("what", what);
                 Message message = new Message();
                 message.setData(bundle);
                 classifyUsersHandler.sendMessage(message);
             }
-        });
+        }).start();
     }
 
 

@@ -34,7 +34,7 @@ public class FollowInfoActivity extends AppCompatActivity {
 
         url = getIntent().getStringExtra("userInfo");
         context = FollowInfoActivity.this;
-        getAllMediaImages();
+        //getAllMediaImages();
     }
 
     private String url = "";
@@ -44,19 +44,19 @@ public class FollowInfoActivity extends AppCompatActivity {
 
     private ProgressDialog pd;
 
-    private Handler handler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            if (pd != null && pd.isShowing())
-                pd.dismiss();
-            if (msg.what == WHAT_FINALIZE) {
-                setImageGridAdapter();
-            } else {
-                Toast.makeText(context, "Check your network.", Toast.LENGTH_SHORT).show();
-            }
-            return false;
-        }
-    });
+//    private Handler handler = new Handler(new Handler.Callback() {
+//        @Override
+//        public boolean handleMessage(Message msg) {
+//            if (pd != null && pd.isShowing())
+//                pd.dismiss();
+//            if (msg.what == WHAT_FINALIZE) {
+//                setImageGridAdapter();
+//            } else {
+//                Toast.makeText(context, "Check your network.", Toast.LENGTH_SHORT).show();
+//            }
+//            return false;
+//        }
+//    });
 
     public static final String TAG_DATA = "data";
     public static final String TAG_ID = "id";
@@ -70,42 +70,42 @@ public class FollowInfoActivity extends AppCompatActivity {
         followInfoListView.setAdapter(new FollowInfoAdapter(context, usersInfo));
     }
 
-    private void getAllMediaImages() {
-        pd = ProgressDialog.show(context, "", "Loading...");
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                int what = WHAT_FINALIZE;
-                try {
-                    // URL url = new URL(mTokenUrl + "&code=" + code);
-                    HttpRequestManager httpRequestManager = new HttpRequestManager();
-                    JSONObject jsonObject = httpRequestManager.acquireJsonwithGetRequest(url);
-                    JSONArray data = jsonObject.getJSONArray(TAG_DATA);
-                    for (int data_i = 0; data_i < data.length(); data_i++) {
-                        HashMap<String, String> hashMap = new HashMap<String, String>();
-                        JSONObject data_obj = data.getJSONObject(data_i);
-                        String str_id = data_obj.getString(TAG_ID);
-
-                        hashMap.put(TAG_PROFILE_PICTURE, data_obj.getString(TAG_PROFILE_PICTURE));
-
-                        // String str_username =
-                        // data_obj.getString(TAG_USERNAME);
-                        // String str_bio = data_obj.getString(TAG_BIO);
-                        // String str_website = data_obj.getString(TAG_WEBSITE);
-
-                        hashMap.put(TAG_USERNAME, data_obj.getString(TAG_USERNAME));
-                        usersInfo.add(hashMap);
-                    }
-
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                    what = WHAT_ERROR;
-                }
-                handler.sendEmptyMessage(what);
-            }
-        }).start();
-    }
+//    private void getAllMediaImages() {
+//        pd = ProgressDialog.show(context, "", "Loading...");
+//        new Thread(new Runnable() {
+//
+//            @Override
+//            public void run() {
+//                int what = WHAT_FINALIZE;
+//                try {
+//                    // URL url = new URL(mTokenUrl + "&code=" + code);
+//                    HttpRequestManager httpRequestManager = new HttpRequestManager();
+//                    JSONObject jsonObject = httpRequestManager.acquireJsonwithGetRequest(url);
+//                    JSONArray data = jsonObject.getJSONArray(TAG_DATA);
+//                    for (int data_i = 0; data_i < data.length(); data_i++) {
+//                        HashMap<String, String> hashMap = new HashMap<String, String>();
+//                        JSONObject data_obj = data.getJSONObject(data_i);
+//                        String str_id = data_obj.getString(TAG_ID);
+//
+//                        hashMap.put(TAG_PROFILE_PICTURE, data_obj.getString(TAG_PROFILE_PICTURE));
+//
+//                        // String str_username =
+//                        // data_obj.getString(TAG_USERNAME);
+//                        // String str_bio = data_obj.getString(TAG_BIO);
+//                        // String str_website = data_obj.getString(TAG_WEBSITE);
+//
+//                        hashMap.put(TAG_USERNAME, data_obj.getString(TAG_USERNAME));
+//                        usersInfo.add(hashMap);
+//                    }
+//
+//                } catch (Exception exception) {
+//                    exception.printStackTrace();
+//                    what = WHAT_ERROR;
+//                }
+//                handler.sendEmptyMessage(what);
+//            }
+//        }).start();
+//    }
 
 
 
