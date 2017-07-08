@@ -115,7 +115,6 @@ public class InstagramLoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mSession = new InstaSession(this);
-        mAccessToken = mSession.getAccessToken();
 
         mAuthUrl = Constants.AUTH_URL
                 + "?client_id="
@@ -127,6 +126,14 @@ public class InstagramLoginActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
 
+        webView = (WebView) findViewById(R.id.webView);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        mAccessToken = mSession.getAccessToken();
         if (mAccessToken != null) {
             fetchUserName();
         } else {
@@ -135,14 +142,12 @@ public class InstagramLoginActivity extends AppCompatActivity {
     }
 
     private void setUpWebView() {
-        webView = (WebView) findViewById(R.id.webView);
+        webView.clearCache(true);
         webView.setVerticalScrollBarEnabled(false);
         webView.setHorizontalScrollBarEnabled(false);
         webView.setWebViewClient(new OAuthWebViewClient());
         webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl(mAuthUrl);
-        //webView.setLayoutParams(FILL);
-        //mContent.addView(mWebView);
     }
 
     private void getAccessToken(final String code) {
@@ -192,8 +197,7 @@ public class InstagramLoginActivity extends AppCompatActivity {
     }
 
     public void fetchUserName() {
-        progressDialog.setTitle("로딩 중..");
-        progressDialog.show();
+        progressDialog = ProgressDialog.show(this, "로딩 중", "유저 정보 가져오는 중...");
 
         new Thread() {
             @Override

@@ -51,11 +51,9 @@ public class InstaSession {
     public String getUsername() {
         return sharedPref.getString(API_USERNAME, null);
     }
-
     public String getId() {
         return sharedPref.getString(API_ID, null);
     }
-
     public String getName() {
         return sharedPref.getString(API_NAME, null);
     }

@@ -1,117 +1,80 @@
 package hpark.instagramfollowers_prototype.activity;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ListView;
-import android.widget.Toast;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import hpark.instagramfollowers_prototype.R;
 import hpark.instagramfollowers_prototype.adapter.FollowInfoAdapter;
-import hpark.instagramfollowers_prototype.api.HttpRequestManager;
+import hpark.instagramfollowers_prototype.util.Constants;
 
 /**
  * Created by hpark_ipl on 2017. 7. 5..
  */
 public class FollowInfoActivity extends AppCompatActivity {
 
+    private SearchView searchView;
     private ListView followInfoListView;
-
+    private int relationship = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_follow);
         followInfoListView = (ListView) findViewById(R.id.followInfoListView);
 
+        relationship = getIntent().getIntExtra("relationship", -1);
         usersInfo = (ArrayList<HashMap<String, String>>)getIntent().getSerializableExtra("usersInfo");
         context = FollowInfoActivity.this;
-        setImageGridAdapter();
-        //getAllMediaImages();
+        setImageGridAdapter(usersInfo);
     }
-
 
     private ArrayList<HashMap<String, String>> usersInfo = new ArrayList<HashMap<String, String>>();
     private Context context;
 
-    private ProgressDialog pd;
-
-//    private Handler handler = new Handler(new Handler.Callback() {
-//        @Override
-//        public boolean handleMessage(Message msg) {
-//            if (pd != null && pd.isShowing())
-//                pd.dismiss();
-//            if (msg.what == WHAT_FINALIZE) {
-//                setImageGridAdapter();
-//            } else {
-//                Toast.makeText(context, "Check your network.", Toast.LENGTH_SHORT).show();
-//            }
-//            return false;
-//        }
-//    });
-
-    public static final String TAG_DATA = "data";
-    public static final String TAG_ID = "id";
-    public static final String TAG_PROFILE_PICTURE = "profile_picture";
-    public static final String TAG_USERNAME = "username";
-    public static final String TAG_BIO = "bio";
-    public static final String TAG_WEBSITE = "website";
-    public static final String TAG_FULL_NAME = "full_name";
-
-    private void setImageGridAdapter() {
-        followInfoListView.setAdapter(new FollowInfoAdapter(context, usersInfo));
+    private void setImageGridAdapter(ArrayList<HashMap<String, String>> filteredUsersInfo) {
+        followInfoListView.setAdapter(new FollowInfoAdapter(context, filteredUsersInfo, relationship));
     }
 
-//    private void getAllMediaImages() {
-//        pd = ProgressDialog.show(context, "", "Loading...");
-//        new Thread(new Runnable() {
-//
-//            @Override
-//            public void run() {
-//                int what = WHAT_FINALIZE;
-//                try {
-//                    // URL url = new URL(mTokenUrl + "&code=" + code);
-//                    HttpRequestManager httpRequestManager = new HttpRequestManager();
-//                    JSONObject jsonObject = httpRequestManager.acquireJsonwithGetRequest(url);
-//                    JSONArray data = jsonObject.getJSONArray(TAG_DATA);
-//                    for (int data_i = 0; data_i < data.length(); data_i++) {
-//                        HashMap<String, String> hashMap = new HashMap<String, String>();
-//                        JSONObject data_obj = data.getJSONObject(data_i);
-//                        String str_id = data_obj.getString(TAG_ID);
-//
-//                        hashMap.put(TAG_PROFILE_PICTURE, data_obj.getString(TAG_PROFILE_PICTURE));
-//
-//                        // String str_username =
-//                        // data_obj.getString(TAG_USERNAME);
-//                        // String str_bio = data_obj.getString(TAG_BIO);
-//                        // String str_website = data_obj.getString(TAG_WEBSITE);
-//
-//                        hashMap.put(TAG_USERNAME, data_obj.getString(TAG_USERNAME));
-//                        usersInfo.add(hashMap);
-//                    }
-//
-//                } catch (Exception exception) {
-//                    exception.printStackTrace();
-//                    what = WHAT_ERROR;
-//                }
-//                handler.sendEmptyMessage(what);
-//            }
-//        }).start();
-//    }
+    private void queryByUserId(String query) {
+        ArrayList<HashMap<String, String>> searchedUsersInfo = new ArrayList<HashMap<String, String>>();
 
+        for(int i = 0; i < usersInfo.size(); i++) {
+            if((usersInfo.get(i).get(Constants.TAG_USERNAME)).contains(query)) {
+                searchedUsersInfo.add(usersInfo.get(i));
+            }
+        }
 
+        setImageGridAdapter(searchedUsersInfo);
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.followinfo_menu, menu);
 
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        searchView = (SearchView) searchItem.getActionView();
+        searchView.setQueryHint("유저 검색");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                queryByUserId(query);
+                return false;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                queryByUserId(newText);
+                return false;
+            }
+        });
 
-
-
+        return super.onCreateOptionsMenu(menu);
+    }
 }

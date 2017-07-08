@@ -29,50 +29,37 @@ public class HttpRequestManager {
     // constructor
     public HttpRequestManager() {}
 
-//    public JSONObject getJSONFromUrlByPost(String url, List<ContentValues> nameValuePairs) {
-//
-//        // Making HTTP request
-//        try {
-//            // defaultHttpClient
-//
-//            DefaultHttpClient httpClient = new DefaultHttpClient();
-//            HttpPost httpPost = new HttpPost(url);
-//            httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-//            HttpResponse httpResponse = httpClient.execute(httpPost);
-//            HttpEntity httpEntity = httpResponse.getEntity();
-//            is = httpEntity.getContent();
-//
-//        } catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//        } catch (ClientProtocolException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        try {
-//            BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8);
-//            StringBuilder sb = new StringBuilder();
-//            String line = null;
-//            while ((line = reader.readLine()) != null) {
-//                sb.append(line + "\n");
-//            }
-//            is.close();
-//            json = sb.toString();
-//        } catch (Exception e) {
-//            Log.e("Buffer Error", "Error converting result " + e.toString());
-//        }
-//
-//        // try parse the string to a JSON object
-//        try {
-//            jObj = new JSONObject(json);
-//        } catch (JSONException e) {
-//            Log.e("JSON Parser", "Error parsing data " + e.toString());
-//        }
-//
-//        // return JSON String
-//        return jObj;
-//    }
+    public JSONObject acquireJsonwithPostRequest(String reqUrl) {
+
+        String response = null;
+        try {
+            URL url = new URL(reqUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+
+            // read the response
+            InputStream in = new BufferedInputStream(conn.getInputStream());
+            response = convertStreamToString(in);
+        } catch (MalformedURLException e) {
+            Log.e(TAG, "MalformedURLException: " + e.getMessage());
+        } catch (ProtocolException e) {
+            Log.e(TAG, "ProtocolException: " + e.getMessage());
+        } catch (IOException e) {
+            Log.e(TAG, "IOException: " + e.getMessage());
+        } catch (Exception e) {
+            Log.e(TAG, "Exception: " + e.getMessage());
+        }
+
+        // try parse the string to a JSON object
+        try {
+            jObj = new JSONObject(response);
+        } catch (JSONException e) {
+            Log.e("JSON Parser", "Error parsing data " + e.toString());
+        }
+
+        // return JSON String
+        return jObj;
+    }
 
     public JSONObject acquireJsonwithGetRequest(String reqUrl) {
 

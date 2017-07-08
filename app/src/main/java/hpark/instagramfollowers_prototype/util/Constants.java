@@ -13,6 +13,7 @@ public class Constants {
     public static final String AUTH_URL = "https://api.instagram.com/oauth/authorize/";
     public static final String TOKEN_URL = "https://api.instagram.com/oauth/access_token";
     public static final String API_URL = "https://api.instagram.com/v1";
+    public static final String USER_URL = "https://api.instagram.com/v1/users/";
 
     public static final String TAG_DATA = "data";
     public static final String TAG_ID = "id";

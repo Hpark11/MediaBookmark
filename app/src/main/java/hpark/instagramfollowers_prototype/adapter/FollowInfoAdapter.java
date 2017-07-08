@@ -14,6 +14,7 @@ import java.util.HashMap;
 
 import hpark.instagramfollowers_prototype.R;
 import hpark.instagramfollowers_prototype.activity.FollowInfoActivity;
+import hpark.instagramfollowers_prototype.util.Constants;
 import hpark.instagramfollowers_prototype.util.ImageManager;
 
 /**
@@ -25,22 +26,47 @@ public class FollowInfoAdapter extends BaseAdapter {
     private ArrayList<HashMap<String, String>> usersInfo;
     private LayoutInflater inflater;
     private ImageManager imageManager;
+    private int relationship = -1;
 
-    public FollowInfoAdapter(Context context, ArrayList<HashMap<String, String>> usersInfo) {
+
+    public FollowInfoAdapter(Context context, ArrayList<HashMap<String, String>> usersInfo, final int relationship) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.usersInfo = usersInfo;
         this.imageManager = new ImageManager(context);
+        this.relationship = relationship;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = inflater.inflate(R.layout.inflator_followinfo, null);
+
         Holder holder = new Holder();
         holder.userImageView = (ImageView) view.findViewById(R.id.userImageView);
         holder.userIdTextView = (TextView) view.findViewById(R.id.userIdTextView);
         holder.followButton = (Button) view.findViewById(R.id.followButton);
-        holder.userIdTextView.setText(usersInfo.get(position).get(FollowInfoActivity.TAG_USERNAME));
-        imageManager.displayImage(usersInfo.get(position).get(FollowInfoActivity.TAG_PROFILE_PICTURE), holder.userImageView);
+
+        holder.followButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = Constants.USER_URL;
+
+                switch (relationship) {
+                    case Constants.REL_EACH_OTHER:
+                        break;
+                    case Constants.REL_ONLY_FOLLOWED_BY:
+                        break;
+                    case Constants.REL_UNFOLLOWED_BY:
+                        break;
+                    case Constants.REL_BLOCKED_BY:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+
+        holder.userIdTextView.setText(usersInfo.get(position).get(Constants.TAG_USERNAME));
+        imageManager.displayImage(usersInfo.get(position).get(Constants.TAG_PROFILE_PICTURE), holder.userImageView);
         return view;
     }
 

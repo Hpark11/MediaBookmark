@@ -59,6 +59,8 @@ public class UserInfoActivity extends AppCompatActivity {
     private final static int FOLLOWS = 1;
     private final static int FOLLOWED = 2;
 
+    private int progressDone = 0;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,17 +87,10 @@ public class UserInfoActivity extends AppCompatActivity {
         refreshUserInfo();
     }
 
-    public void followerButtonTapped(View view) {
-        final String url = "https://api.instagram.com/v1/users/self/followed-by?access_token=" + mSession.getAccessToken();
-        startActivity(new Intent(UserInfoActivity.this, FollowInfoActivity.class).putExtra("usersInfo", url));
-    }
-
-    public void followingButtonTapped(View view) {
-        String url = "https://api.instagram.com/v1/users/self/follows?access_token=" + mSession.getAccessToken();
-        startActivity(new Intent(UserInfoActivity.this, FollowInfoActivity.class).putExtra("userInfo", url));
-    }
-
     public void refreshUserInfo() {
+        progressDialog = ProgressDialog.show(this, "로딩 중", "Loading...");
+        progressDone = 0;
+
         eachOtherUsersInfo.clear();
         onlyFollowedByUsersInfo.clear();
         unfollowedByUsersInfo.clear();
@@ -110,21 +105,26 @@ public class UserInfoActivity extends AppCompatActivity {
     }
 
     public void eachOtherButtonTapped(View view) {
-        startActivity(new Intent(UserInfoActivity.this, FollowInfoActivity.class).putExtra("usersInfo", eachOtherUsersInfo));
+        startFollowInfoActivity(eachOtherUsersInfo, Constants.REL_EACH_OTHER);
     }
 
     public void blockmeButtonTapped(View view) {
-        startActivity(new Intent(UserInfoActivity.this, FollowInfoActivity.class).putExtra("usersInfo", unfollowedByUsersInfo));
+        startFollowInfoActivity(unfollowedByUsersInfo, Constants.REL_BLOCKED_BY);
     }
 
     public void unfollowButtonTapped(View view) {
-        startActivity(new Intent(UserInfoActivity.this, FollowInfoActivity.class).putExtra("usersInfo", unfollowedByUsersInfo));
+        startFollowInfoActivity(unfollowedByUsersInfo, Constants.REL_UNFOLLOWED_BY);
     }
 
     public void onlyFollowedByButtonTapped(View view) {
-        startActivity(new Intent(UserInfoActivity.this, FollowInfoActivity.class).putExtra("usersInfo", onlyFollowedByUsersInfo));
+        startFollowInfoActivity(onlyFollowedByUsersInfo, Constants.REL_ONLY_FOLLOWED_BY);
     }
 
+    private void startFollowInfoActivity(final ArrayList<HashMap<String, String>> selectedUsersInfo, final int relationship) {
+        Intent intent = new Intent(UserInfoActivity.this, FollowInfoActivity.class);
+        intent.putExtra("usersInfo", selectedUsersInfo);
+        intent.putExtra("relationship", relationship);
+    }
 
     private Handler followingHandler = new Handler(new Handler.Callback() {
         @Override
@@ -136,14 +136,13 @@ public class UserInfoActivity extends AppCompatActivity {
                     queryUserRelationShipAndClassifyUsers(followersInfo, FOLLOWED);
                 }
             } else if (msg.what == Constants.WHAT_ERROR) {
-                Toast.makeText(UserInfoActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(UserInfoActivity.this, "네트워크 에러", Toast.LENGTH_LONG).show();
             }
             return false;
         }
     });
 
     private void fetchAllFollowInfo(final String url, final Handler handler, final int identifier) {
-        //progressDialog = ProgressDialog.show(this, "로딩 중", "Loading...");
 
         new Thread(new Runnable() {
             @Override
@@ -191,6 +190,7 @@ public class UserInfoActivity extends AppCompatActivity {
             final int what = bundle.getInt("what", 0);
             final int identifier = bundle.getInt("identifier", 0);
             final int[] msgData = bundle.getIntArray("msgData");
+            progressDone++;
 
             if (what == Constants.WHAT_FINALIZE) {
 
@@ -223,6 +223,12 @@ public class UserInfoActivity extends AppCompatActivity {
 
                     onlyFollowedByButton.setText("상대만 나를 팔로우\n" + onlyFollowedByUsersInfo.size());
                 }
+            } else if (msg.what == Constants.WHAT_ERROR) {
+                Toast.makeText(UserInfoActivity.this, "네트워크 에러", Toast.LENGTH_LONG).show();
+            }
+
+            if(progressDone >= 2) {
+                progressDialog.dismiss();
             }
 
             return false;
