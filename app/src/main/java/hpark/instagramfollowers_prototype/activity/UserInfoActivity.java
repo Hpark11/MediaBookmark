@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -30,6 +33,7 @@ import hpark.instagramfollowers_prototype.util.ImageManager;
 
 public class UserInfoActivity extends AppCompatActivity {
 
+    private final static String TAG = "UserInfoActivity";
     private InstaSession mSession;
     private HashMap<String, String> userInfo;
 
@@ -42,7 +46,7 @@ public class UserInfoActivity extends AppCompatActivity {
     private ArrayList<HashMap<String, String>> eachOtherUsersInfo = new ArrayList<HashMap<String, String>>();
     private ArrayList<HashMap<String, String>> onlyFollowedByUsersInfo = new ArrayList<HashMap<String, String>>();
     private ArrayList<HashMap<String, String>> unfollowedByUsersInfo = new ArrayList<HashMap<String, String>>();
-    private ArrayList<HashMap<String, String>> blockedByUsersInfo = new ArrayList<HashMap<String, String>>();
+    //private ArrayList<HashMap<String, String>> blockedByUsersInfo = new ArrayList<HashMap<String, String>>();
 
     private ArrayList<HashMap<String, String>> usersInfo = new ArrayList<HashMap<String, String>>();
     private ArrayList<HashMap<String, String>> followersInfo = new ArrayList<HashMap<String, String>>();
@@ -91,11 +95,14 @@ public class UserInfoActivity extends AppCompatActivity {
         startActivity(new Intent(UserInfoActivity.this, FollowInfoActivity.class).putExtra("userInfo", url));
     }
 
-    public void notEachOtherButtonTapped(View view) {
-
-    }
-
     public void refreshUserInfo() {
+        eachOtherUsersInfo.clear();
+        onlyFollowedByUsersInfo.clear();
+        unfollowedByUsersInfo.clear();
+
+        usersInfo.clear();
+        followersInfo.clear();
+
         String urlFollows = "https://api.instagram.com/v1/users/self/follows?access_token=" + mSession.getAccessToken();
         String urlFollowers = "https://api.instagram.com/v1/users/self/followed-by?access_token=" + mSession.getAccessToken();
         fetchAllFollowInfo(urlFollows, followingHandler, FOLLOWS);
@@ -282,4 +289,32 @@ public class UserInfoActivity extends AppCompatActivity {
         }).start();
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        Log.d(TAG, "onCreateOptionsMenu()");
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG, "onOptionsItemSelected()");
+
+        int id = item.getItemId();
+        switch(id) {
+            case R.id.refresh:
+                refreshUserInfo();
+                break;
+            case R.id.menu_logout:
+                if(mSession != null) {
+                    mSession.resetAccessToken();
+                    finish();
+                }
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
