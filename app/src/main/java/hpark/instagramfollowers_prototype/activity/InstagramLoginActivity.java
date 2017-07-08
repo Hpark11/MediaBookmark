@@ -114,6 +114,10 @@ public class InstagramLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setIcon(R.drawable.logo);
+
         mSession = new InstaSession(this);
 
         mAuthUrl = Constants.AUTH_URL

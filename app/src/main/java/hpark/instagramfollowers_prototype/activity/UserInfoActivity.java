@@ -83,7 +83,11 @@ public class UserInfoActivity extends AppCompatActivity {
         imageManager.displayImage(userInfo.get(Constants.TAG_PROFILE_PICTURE), userImageView);
         usernameTextView.setText(userInfo.get(Constants.TAG_USERNAME));
         followInfoTextView.setText("팔로워 : " + userInfo.get(Constants.TAG_FOLLOWED_BY) + ", 팔로잉 : " + userInfo.get(Constants.TAG_FOLLOWS));
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
         refreshUserInfo();
     }
 
@@ -124,6 +128,7 @@ public class UserInfoActivity extends AppCompatActivity {
         Intent intent = new Intent(UserInfoActivity.this, FollowInfoActivity.class);
         intent.putExtra("usersInfo", selectedUsersInfo);
         intent.putExtra("relationship", relationship);
+        startActivity(intent);
     }
 
     private Handler followingHandler = new Handler(new Handler.Callback() {

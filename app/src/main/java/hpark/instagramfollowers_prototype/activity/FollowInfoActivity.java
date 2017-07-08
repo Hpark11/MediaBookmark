@@ -31,15 +31,13 @@ public class FollowInfoActivity extends AppCompatActivity {
 
         relationship = getIntent().getIntExtra("relationship", -1);
         usersInfo = (ArrayList<HashMap<String, String>>)getIntent().getSerializableExtra("usersInfo");
-        context = FollowInfoActivity.this;
         setImageGridAdapter(usersInfo);
     }
 
     private ArrayList<HashMap<String, String>> usersInfo = new ArrayList<HashMap<String, String>>();
-    private Context context;
 
     private void setImageGridAdapter(ArrayList<HashMap<String, String>> filteredUsersInfo) {
-        followInfoListView.setAdapter(new FollowInfoAdapter(context, filteredUsersInfo, relationship));
+        followInfoListView.setAdapter(new FollowInfoAdapter(this, filteredUsersInfo, relationship));
     }
 
     private void queryByUserId(String query) {
