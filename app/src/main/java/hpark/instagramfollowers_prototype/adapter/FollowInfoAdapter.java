@@ -1,6 +1,7 @@
 package hpark.instagramfollowers_prototype.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.makeramen.roundedimageview.RoundedTransformationBuilder;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -32,7 +37,6 @@ public class FollowInfoAdapter extends BaseAdapter {
 
     private ArrayList<HashMap<String, String>> usersInfo;
     private LayoutInflater inflater;
-    private ImageManager imageManager;
     private int relationship = -1;
     private InstaSession instaSession;
     private Context mContext;
@@ -40,7 +44,6 @@ public class FollowInfoAdapter extends BaseAdapter {
     public FollowInfoAdapter(Context context, ArrayList<HashMap<String, String>> usersInfo, final int relationship) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.usersInfo = usersInfo;
-        this.imageManager = new ImageManager(context);
         this.relationship = relationship;
         this.mContext = context;
         instaSession = new InstaSession(context);
@@ -114,7 +117,18 @@ public class FollowInfoAdapter extends BaseAdapter {
         });
 
         holder.userIdTextView.setText(usersInfo.get(position).get(Constants.TAG_USERNAME));
-        imageManager.displayImage(usersInfo.get(position).get(Constants.TAG_PROFILE_PICTURE), holder.userImageView);
+
+//        Transformation transformation = new RoundedTransformationBuilder()
+//                .borderColor(Color.GRAY)
+//                .borderWidthDp(1)
+//                .cornerRadiusDp(30)
+//                .oval(false)
+//                .build();
+
+        Picasso.with(mContext).load(usersInfo.get(position).get(Constants.TAG_PROFILE_PICTURE))
+                .placeholder(R.drawable.placeholder)
+                //.transform(transformation)
+                .into(holder.userImageView);
         return view;
     }
 

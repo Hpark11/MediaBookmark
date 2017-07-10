@@ -13,8 +13,7 @@
             android:id="@+id/userImageView"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/placeholder" />
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/userIdTextView"

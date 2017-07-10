@@ -2,6 +2,7 @@ package hpark.instagramfollowers_prototype.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,6 +15,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.makeramen.roundedimageview.RoundedTransformationBuilder;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -79,8 +84,17 @@ public class UserInfoActivity extends AppCompatActivity {
         unfollowedButton = (Button) findViewById(R.id.unfollowButton);
         blockmeButton = (Button) findViewById(R.id.blockmeButton);
 
-        final ImageManager imageManager = new ImageManager(this);
-        imageManager.displayImage(userInfo.get(Constants.TAG_PROFILE_PICTURE), userImageView);
+        Transformation transformation = new RoundedTransformationBuilder()
+                .borderColor(Color.GRAY)
+                .borderWidthDp(1)
+                .cornerRadiusDp(30)
+                .oval(false)
+                .build();
+
+        Picasso.with(this).load(userInfo.get(Constants.TAG_PROFILE_PICTURE))
+                .transform(transformation)
+                .into(userImageView);
+
         usernameTextView.setText(userInfo.get(Constants.TAG_USERNAME));
         followInfoTextView.setText("팔로워 : " + userInfo.get(Constants.TAG_FOLLOWED_BY) + ", 팔로잉 : " + userInfo.get(Constants.TAG_FOLLOWS));
     }
