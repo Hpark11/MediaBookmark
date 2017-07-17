@@ -68,7 +68,7 @@
                 android:layout_weight="1"
                 android:onClick="eachOtherButtonTapped"
                 android:text="서로 팔로우"
-                android:textSize="18sp" />
+                android:textSize="22sp" />
 
             <Button
                 android:id="@+id/onlyFollowedByButton"
@@ -77,7 +77,7 @@
                 android:layout_weight="1"
                 android:onClick="onlyFollowedByButtonTapped"
                 android:text="상대만 나를 팔로우"
-                android:textSize="18sp"/>
+                android:textSize="22sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -93,7 +93,7 @@
                 android:layout_weight="1"
                 android:onClick="unfollowButtonTapped"
                 android:text="나를 언팔로우"
-                android:textSize="18sp"/>
+                android:textSize="22sp"/>
 
             <Button
                 android:id="@+id/blockmeButton"
@@ -102,7 +102,7 @@
                 android:layout_weight="1"
                 android:onClick="blockmeButtonTapped"
                 android:text="나를 블락한"
-                android:textSize="18sp"/>
+                android:textSize="22sp"/>
         </LinearLayout>
 
     </LinearLayout>

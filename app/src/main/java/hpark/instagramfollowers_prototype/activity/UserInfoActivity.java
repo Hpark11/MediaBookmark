@@ -85,6 +85,7 @@ public class UserInfoActivity extends AppCompatActivity {
         onlyFollowedByButton = (Button) findViewById(R.id.onlyFollowedByButton);
         unfollowedButton = (Button) findViewById(R.id.unfollowButton);
         blockmeButton = (Button) findViewById(R.id.blockmeButton);
+        blockmeButton.setEnabled(false);
 
         Transformation transformation = new RoundedTransformationBuilder()
                 .borderColor(Color.GRAY)
@@ -103,7 +104,6 @@ public class UserInfoActivity extends AppCompatActivity {
         AdView adView = (AdView) findViewById(R.id.adView);
         AdRequest request = new AdRequest.Builder().build();
         adView.loadAd(request);
-
         MobileAds.initialize(getApplicationContext(), getResources().getString(R.string.ad_app_id));
     }
 
@@ -235,8 +235,8 @@ public class UserInfoActivity extends AppCompatActivity {
                         }
                     }
 
-                    eachOtherButton.setText("서로 팔로우\n" + eachOtherUsersInfo.size());
-                    unfollowedButton.setText("나를 언팔로우\n" + unfollowedByUsersInfo.size());
+                    eachOtherButton.setText("서로 팔로우\n\n" + eachOtherUsersInfo.size());
+                    unfollowedButton.setText("나를 언팔로우\n\n" + unfollowedByUsersInfo.size());
                 } else if(identifier == FOLLOWED) {
                     for (int i = 0; i < msgData.length; i++) {
                         switch (msgData[i]) {
@@ -248,7 +248,7 @@ public class UserInfoActivity extends AppCompatActivity {
                         }
                     }
 
-                    onlyFollowedByButton.setText("상대만 나를 팔로우\n" + onlyFollowedByUsersInfo.size());
+                    onlyFollowedByButton.setText("상대만 나를 팔로우\n\n" + onlyFollowedByUsersInfo.size());
                 }
             } else if (msg.what == Constants.WHAT_ERROR) {
                 Toast.makeText(UserInfoActivity.this, "네트워크 에러", Toast.LENGTH_LONG).show();
@@ -280,7 +280,6 @@ public class UserInfoActivity extends AppCompatActivity {
 
                         JSONObject jsonObject = httpRequestManager.acquireJsonwithGetRequest(url);
                         JSONObject data = jsonObject.getJSONObject(Constants.TAG_DATA);
-
 
                         if (identifier == FOLLOWS) {
                             String incomingStatus = data.getString(Constants.TAG_INCOMING_STATUS);

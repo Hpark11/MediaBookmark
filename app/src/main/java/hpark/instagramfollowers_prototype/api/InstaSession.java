@@ -65,7 +65,6 @@ public class InstaSession {
     public String getName() {
         return sharedPref.getString(API_NAME, null);
     }
-
     public String getAccessToken() {
         return sharedPref.getString(API_ACCESS_TOKEN, null);
     }
