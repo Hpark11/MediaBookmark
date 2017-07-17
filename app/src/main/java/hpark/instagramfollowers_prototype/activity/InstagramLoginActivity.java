@@ -8,8 +8,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.ViewGroup;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -24,10 +28,6 @@ import hpark.instagramfollowers_prototype.R;
 import hpark.instagramfollowers_prototype.api.InstaSession;
 import hpark.instagramfollowers_prototype.util.Constants;
 import hpark.instagramfollowers_prototype.util.StreamManager;
-
-/**
- * Created by hpark_ipl on 2017. 7. 4..
- */
 
 public class InstagramLoginActivity extends AppCompatActivity {
 
@@ -114,10 +114,6 @@ public class InstagramLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setIcon(R.drawable.logo);
-
         mSession = new InstaSession(this);
 
         mAuthUrl = Constants.AUTH_URL
@@ -129,13 +125,15 @@ public class InstagramLoginActivity extends AppCompatActivity {
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
-
-        webView = (WebView) findViewById(R.id.webView);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
+        CookieSyncManager.createInstance(this);
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.removeAllCookie();
 
         mAccessToken = mSession.getAccessToken();
         if (mAccessToken != null) {
@@ -145,13 +143,19 @@ public class InstagramLoginActivity extends AppCompatActivity {
         }
     }
 
+    static final LinearLayout.LayoutParams matchParent = new LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT);
+
     private void setUpWebView() {
+        webView = new WebView(this);
         webView.clearCache(true);
         webView.setVerticalScrollBarEnabled(false);
         webView.setHorizontalScrollBarEnabled(false);
         webView.setWebViewClient(new OAuthWebViewClient());
         webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl(mAuthUrl);
+        addContentView(webView, matchParent);
     }
 
     private void getAccessToken(final String code) {
@@ -272,7 +276,6 @@ public class InstagramLoginActivity extends AppCompatActivity {
 
         @Override public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-
             Log.d(TAG, "onPageFinished URL: " + url);
             progressDialog.dismiss();
         }

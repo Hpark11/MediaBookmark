@@ -33,4 +33,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.makeramen:roundedimageview:2.3.0'
+    compile 'com.google.firebase:firebase-ads:10.0.1'
+    compile 'com.google.gms:google-services:3.0.0'
 }

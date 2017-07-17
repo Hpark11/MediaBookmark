@@ -23,6 +23,7 @@ public class FollowInfoActivity extends AppCompatActivity {
     private SearchView searchView;
     private ListView followInfoListView;
     private int relationship = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

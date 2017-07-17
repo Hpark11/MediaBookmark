@@ -16,6 +16,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
@@ -30,7 +33,6 @@ import hpark.instagramfollowers_prototype.R;
 import hpark.instagramfollowers_prototype.api.HttpRequestManager;
 import hpark.instagramfollowers_prototype.api.InstaSession;
 import hpark.instagramfollowers_prototype.util.Constants;
-import hpark.instagramfollowers_prototype.util.ImageManager;
 
 /**
  * Created by hpark_ipl on 2017. 7. 5..
@@ -97,6 +99,12 @@ public class UserInfoActivity extends AppCompatActivity {
 
         usernameTextView.setText(userInfo.get(Constants.TAG_USERNAME));
         followInfoTextView.setText("팔로워 : " + userInfo.get(Constants.TAG_FOLLOWED_BY) + ", 팔로잉 : " + userInfo.get(Constants.TAG_FOLLOWS));
+
+        AdView adView = (AdView) findViewById(R.id.adView);
+        AdRequest request = new AdRequest.Builder().build();
+        adView.loadAd(request);
+
+        MobileAds.initialize(getApplicationContext(), getResources().getString(R.string.ad_app_id));
     }
 
     @Override

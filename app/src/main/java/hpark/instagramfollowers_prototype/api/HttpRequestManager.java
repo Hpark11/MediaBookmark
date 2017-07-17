@@ -51,7 +51,6 @@ public class HttpRequestManager {
             conn.setDoInput(true);
             conn.setDoOutput(true);
 
-
             OutputStream os = conn.getOutputStream();
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
             writer.write(getPostDataString(postDataParams));

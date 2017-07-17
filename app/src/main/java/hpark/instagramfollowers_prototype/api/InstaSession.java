@@ -24,6 +24,11 @@ public class InstaSession {
         editor = sharedPref.edit();
     }
 
+    public void setLoginPass(boolean isPass) {
+        editor.putBoolean("pass", isPass);
+        editor.commit();
+    }
+
     public void storeAccessToken(String accessToken, String id, String username, String name) {
         editor.putString(API_ID, id);
         editor.putString(API_NAME, name);
@@ -48,6 +53,9 @@ public class InstaSession {
         editor.commit();
     }
 
+    public boolean getLoginPass() {
+        return sharedPref.getBoolean("pass", false);
+    }
     public String getUsername() {
         return sharedPref.getString(API_USERNAME, null);
     }
