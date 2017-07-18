@@ -76,8 +76,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:onClick="onlyFollowedByButtonTapped"
-                android:text="상대만 나를 팔로우"
-                android:textSize="22sp"/>
+                android:text="상대만 팔로우"
+                android:textSize="22sp" />
         </LinearLayout>
 
         <LinearLayout

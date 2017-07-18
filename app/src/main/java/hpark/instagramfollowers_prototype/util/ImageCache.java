@@ -30,16 +30,15 @@ public class ImageCache {
         setLimit(Runtime.getRuntime().maxMemory()/4);
     }
 
-    public void setLimit(long new_limit){
+    public void setLimit(long new_limit) {
         limit=new_limit;
-        Log.i(TAG, "MemoryCache will use up to "+limit/1024./1024.+"MB");
+        Log.i(TAG, "MemoryCache will use up to " + limit/1024./1024.+"MB");
     }
 
     public Bitmap get(String id){
         try{
             if(!cache.containsKey(id))
                 return null;
-
             //NullPointerException sometimes happen here http://code.google.com/p/osmdroid/issues/detail?id=78
             return cache.get(id);
         } catch(NullPointerException ex) {

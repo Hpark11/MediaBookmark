@@ -248,7 +248,7 @@ public class UserInfoActivity extends AppCompatActivity {
                         }
                     }
 
-                    onlyFollowedByButton.setText("상대만 나를 팔로우\n\n" + onlyFollowedByUsersInfo.size());
+                    onlyFollowedByButton.setText("상대만 팔로우\n\n" + onlyFollowedByUsersInfo.size());
                 }
             } else if (msg.what == Constants.WHAT_ERROR) {
                 Toast.makeText(UserInfoActivity.this, "네트워크 에러", Toast.LENGTH_LONG).show();
