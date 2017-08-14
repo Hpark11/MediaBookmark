@@ -1,7 +1,6 @@
 package hpark.instagramfollowers_prototype.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,23 +10,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Transformation;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.logging.Handler;
+import java.util.HashMap;;
 
 import hpark.instagramfollowers_prototype.R;
-import hpark.instagramfollowers_prototype.activity.FollowInfoActivity;
 import hpark.instagramfollowers_prototype.api.HttpRequestManager;
 import hpark.instagramfollowers_prototype.api.InstaSession;
 import hpark.instagramfollowers_prototype.util.Constants;
-import hpark.instagramfollowers_prototype.util.ImageManager;
 
 /**
  * Created by hpark_ipl on 2017. 7. 5..
@@ -91,7 +84,6 @@ public class FollowInfoAdapter extends BaseAdapter {
         holder.followButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -105,7 +97,6 @@ public class FollowInfoAdapter extends BaseAdapter {
                                 notifyDataSetChanged();
                                 Toast.makeText(mContext, "요청완료", Toast.LENGTH_SHORT).show();
                             }
-
                         } catch (Exception exception) {
                             exception.printStackTrace();
                         }

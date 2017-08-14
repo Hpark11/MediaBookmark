@@ -115,7 +115,6 @@ public class InstagramLoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mSession = new InstaSession(this);
-
         mAuthUrl = Constants.AUTH_URL
                 + "?client_id="
                 + Constants.CLIENT_ID
