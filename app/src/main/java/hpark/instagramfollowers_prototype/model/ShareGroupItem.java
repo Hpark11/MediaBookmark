@@ -24,7 +24,7 @@ public class ShareGroupItem {
         }
     }
 
-    public int getId() {
+    public int getShareGroupId() {
         return id;
     }
 

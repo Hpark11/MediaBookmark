@@ -99,7 +99,7 @@ public class InstagramLoginActivity extends AppCompatActivity {
         @Override
         public boolean handleMessage(Message msg) {
             if (msg.what == WHAT_FINALIZE) {
-                Intent intent = new Intent(InstagramLoginActivity.this, UserInfoActivity.class);
+                Intent intent = new Intent(InstagramLoginActivity.this, MainInfoActivity.class);
                 intent.putExtra("map", userInfo);
                 startActivity(intent);
             } else if (msg.what == WHAT_ERROR) {

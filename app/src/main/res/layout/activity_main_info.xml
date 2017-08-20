@@ -155,7 +155,7 @@
     </FrameLayout>
 
     <TextView
-        android:id="@+id/textView10"
+        android:id="@+id/shareGroupNameTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="0dp"
@@ -182,7 +182,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView10" />
+        app:layout_constraintTop_toBottomOf="@+id/shareGroupNameTextView" />
 
     <!--<android.support.v7.widget.recyclerview android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/recycler_view" android:scrollbars="vertical">-->
     <!--</android.support.v7.widget.recyclerview>-->

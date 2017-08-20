@@ -36,6 +36,18 @@
 
         </activity>
 
+        <activity android:name=".activity.MainInfoActivity">
+
+        </activity>
+
+        <activity android:name=".activity.AddNewShareGroupActivity">
+
+        </activity>
+
+        <activity android:name=".activity.MediaShareGroupActivity">
+
+        </activity>
+
         <activity android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@android:style/Theme.Translucent">
