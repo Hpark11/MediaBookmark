@@ -6,17 +6,48 @@
     android:layout_height="match_parent">
 
 
+    <TextView
+        android:id="@+id/shareGroupNameTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        android:background="@color/colorLightGreen"
+        android:paddingLeft="10dp"
+        android:text="즐겨찾기"
+        android:textSize="30sp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout">
+
+    </TextView>
+
+
+    <ListView
+        android:id="@+id/shareGroupListView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/shareGroupNameTextView" />
+
     <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="0dp"
         android:layout_height="220dp"
+        android:layout_marginTop="0dp"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1"
-        android:id="@+id/frameLayout">
+        tools:layout_constraintTop_creator="1">
 
         <ImageView
             android:id="@+id/userImageView"
@@ -53,7 +84,7 @@
                 android:textSize="30sp" />
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/userIntroTextView"
                 android:layout_width="match_parent"
                 android:layout_height="28dp"
                 android:layout_marginLeft="10dp"
@@ -84,7 +115,7 @@
                         android:textColor="@color/cardview_light_background" />
 
                     <TextView
-                        android:id="@+id/textView4"
+                        android:id="@+id/numPostsTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -111,7 +142,7 @@
                         android:textColor="@color/cardview_light_background" />
 
                     <TextView
-                        android:id="@+id/textView6"
+                        android:id="@+id/numFollowingTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -138,7 +169,7 @@
                         android:textColor="@color/cardview_light_background" />
 
                     <TextView
-                        android:id="@+id/textView8"
+                        android:id="@+id/numFollowersTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -154,35 +185,13 @@
 
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/shareGroupNameTextView"
-        android:layout_width="0dp"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginTop="0dp"
-        android:background="@color/colorLightGreen"
-        android:paddingLeft="10dp"
-        android:text="즐겨찾기"
-        android:textSize="30sp"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frameLayout">
-
-    </TextView>
-
-
-    <ListView
-        android:id="@+id/shareGroupListView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/shareGroupNameTextView" />
+        android:clickable="true"
+        app:fabSize="mini"
+        app:srcCompat="@color/colorLightGreen" />
 
     <!--<android.support.v7.widget.recyclerview android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/recycler_view" android:scrollbars="vertical">-->
     <!--</android.support.v7.widget.recyclerview>-->
