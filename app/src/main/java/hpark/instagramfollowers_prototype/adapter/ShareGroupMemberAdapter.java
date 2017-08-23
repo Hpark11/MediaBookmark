@@ -54,8 +54,6 @@ public class ShareGroupMemberAdapter extends BaseAdapter {
         holder.userImageView = (ImageView) view.findViewById(R.id.userImageView);
         holder.userIdTextView = (TextView) view.findViewById(R.id.userIdTextView);
 
-
-
         return view;
     }
 

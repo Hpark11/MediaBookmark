@@ -5,8 +5,8 @@ package hpark.instagramfollowers_prototype.util;
  */
 
 public class Constants {
-    public static final String CLIENT_ID = "e4ce21124f624c9b984ce86b51892b2a";
-    public static final String CLIENT_SECRET = "928755e7383c48b199323a3cf99d4b26";
+    public static final String CLIENT_ID = "21cf0c6cda8b45ac80366132b356f92a";
+    public static final String CLIENT_SECRET = "b7e5212b14e046ebbf34a657b8589b90";
     public static final String CALLBACK_URL = "http://sknbiz.com/";
     //instagram://connect";//http://www.google.com";//"instagram://connect";
 

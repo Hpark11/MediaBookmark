@@ -3,44 +3,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    xmlns:ads="http://schemas.android.com/apk/res-auto">
 
     <TextView
         android:id="@+id/shareGroupNameTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginTop="0dp"
-        android:background="@color/colorLightGreen"
+        android:background="@color/colorPrimary"
         android:paddingLeft="10dp"
+        android:textColor="@color/colorWhite"
         android:text="즐겨찾기"
-        android:textSize="30sp"
+        android:textSize="18sp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/frameLayout">
-
     </TextView>
-
-
-    <ListView
-        android:id="@+id/shareGroupListView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/shareGroupNameTextView" />
 
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="0dp"
-        android:layout_height="220dp"
-        android:layout_marginTop="0dp"
+        android:layout_height="230dp"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -52,13 +38,14 @@
         <ImageView
             android:id="@+id/userImageView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"/>
 
         <ImageView
             android:id="@+id/blackImageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:alpha="0.6"
+            android:alpha="0.5"
             android:src="@color/cardview_dark_background"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -72,7 +59,7 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="70dp" />
+                android:layout_height="80dp" />
 
             <TextView
                 android:id="@+id/userNameTextView"
@@ -179,21 +166,50 @@
                         android:textSize="24sp" />
                 </LinearLayout>
             </LinearLayout>
-
         </LinearLayout>
+    </FrameLayout>
 
+    <FrameLayout
+        android:id="@+id/userManageFrameLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/adView"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/shareGroupNameTextView">
 
     </FrameLayout>
 
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="0dp"
+        android:layout_height="54dp"
+        android:layout_gravity="center_horizontal"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="@color/colorPrimary"
+        >
+
+    </com.google.android.gms.ads.AdView>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatingActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="18dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginRight="18dp"
         android:clickable="true"
+        android:src="@drawable/ic_face_white_24dp"
         app:fabSize="mini"
-        app:srcCompat="@color/colorLightGreen" />
-
-    <!--<android.support.v7.widget.recyclerview android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/recycler_view" android:scrollbars="vertical">-->
-    <!--</android.support.v7.widget.recyclerview>-->
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
