@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import hpark.instagramfollowers_prototype.R;
+import hpark.instagramfollowers_prototype.activity.MainInfoActivity;
 import hpark.instagramfollowers_prototype.model.ShareGroupItem;
 
 /**
@@ -29,17 +30,17 @@ public class ShareGroupAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 0;
+        return shareGroups.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return position;
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override
@@ -47,6 +48,18 @@ public class ShareGroupAdapter extends BaseAdapter {
         View view = inflater.inflate(R.layout.inflator_share_group, null);
 
         final Holder holder = new Holder();
+        final ArrayList<String> infoList = shareGroups.get(position).getShareGroupUsersInfoList();
+        final ArrayList<String> idList = new ArrayList<>();
+        String shareGroupUsersInfo = "";
+        for (int i = 0; i < infoList.size(); i++) {
+            String[] sep = infoList.get(i).split("\\|");
+            idList.add(sep[0]);
+            shareGroupUsersInfo += sep[1];
+
+            if (i != infoList.size() - 1) {
+                shareGroupUsersInfo += ", ";
+            }
+        }
 
         holder.shareGroupNameTextView = (TextView) view.findViewById(R.id.shareGroupNameTextView);
         holder.shareGroupUsersInfoTextView = (TextView) view.findViewById(R.id.shareGroupUsersInfoTextView);
@@ -54,20 +67,11 @@ public class ShareGroupAdapter extends BaseAdapter {
         holder.shareGroupDetailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (context instanceof MainInfoActivity) {
+                    ((OnCheckShareGroupDetailListener)context).onCheckShareGroupDetail(idList);
+                }
             }
         });
-
-        String shareGroupUsersInfo = "";
-        ArrayList<String> infoList = shareGroups.get(position).getShareGroupUsersInfoList();
-        for (int i = 0; i < infoList.size(); i++) {
-            String[] sep = infoList.get(i).split("|");
-            shareGroupUsersInfo += sep[1];
-
-            if (i != infoList.size() - 1) {
-                shareGroupUsersInfo += ", ";
-            }
-        }
 
         holder.shareGroupNameTextView.setText(shareGroups.get(position).getShareGroupName());
         holder.shareGroupUsersInfoTextView.setText(shareGroupUsersInfo);
@@ -78,5 +82,9 @@ public class ShareGroupAdapter extends BaseAdapter {
         private TextView shareGroupNameTextView;
         private TextView shareGroupUsersInfoTextView;
         private Button shareGroupDetailButton;
+    }
+
+    public interface OnCheckShareGroupDetailListener {
+        public void onCheckShareGroupDetail(ArrayList<String> idList);
     }
 }

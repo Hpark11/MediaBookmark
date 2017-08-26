@@ -182,6 +182,72 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/shareGroupNameTextView">
 
+        <ListView
+            android:id="@+id/shareGroupListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="0dp" />
+
+        <LinearLayout
+            android:id="@+id/followManageLinearLayout"
+            android:orientation="vertical" android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="1">
+
+                <Button
+                    android:id="@+id/eachOtherButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="eachOtherButtonTapped"
+                    android:text="서로 팔로우"
+                    android:textSize="22sp" />
+
+                <Button
+                    android:id="@+id/onlyFollowedByButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="onlyFollowedByButtonTapped"
+                    android:text="상대만 팔로우"
+                    android:textSize="22sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="1">
+
+                <Button
+                    android:id="@+id/unfollowButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="unfollowButtonTapped"
+                    android:text="나를 언팔로우"
+                    android:textSize="22sp"/>
+
+                <Button
+                    android:id="@+id/blockmeButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="blockmeButtonTapped"
+                    android:text="나를 블락한"
+                    android:textSize="22sp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
     </FrameLayout>
 
     <com.google.android.gms.ads.AdView
@@ -201,13 +267,13 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatingActionButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginBottom="18dp"
-        android:layout_marginEnd="18dp"
-        android:layout_marginRight="18dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginBottom="22dp"
+        android:layout_marginEnd="22dp"
+        android:layout_marginRight="22dp"
         android:clickable="true"
-        android:src="@drawable/ic_face_white_24dp"
+        android:src="@drawable/ic_settings_white_24dp"
         app:fabSize="mini"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />

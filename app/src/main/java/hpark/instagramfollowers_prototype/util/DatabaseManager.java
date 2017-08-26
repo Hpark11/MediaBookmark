@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
+import android.widget.Toast;
 
 /**
  * Created by hpark_ipl on 2017. 8. 14..
@@ -30,7 +31,7 @@ public class DatabaseManager {
 
     // Table Creation
     public static final String createShareGroupTable = "Create table IF NOT EXISTS " + shareGroupTableName +
-            "(ID integer PRIMARY KEY AUTOINCREMENT," + colUsersInfo + " text);";
+            "(ID integer PRIMARY KEY AUTOINCREMENT," + colShareGroupName + " text," + colUsersInfo + " text);";
 
     public DatabaseManager(Context context) {
         DatabaseManagerHelper dbHelper = new DatabaseManagerHelper(context);
@@ -70,6 +71,7 @@ public class DatabaseManager {
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL(createShareGroupTable);
+            Toast.makeText(context, "Table has been created", Toast.LENGTH_LONG).show();
         }
 
         @Override
@@ -77,5 +79,7 @@ public class DatabaseManager {
             db.execSQL("DROP Table IF EXISTS " + shareGroupTableName);
             onCreate(db);
         }
+
+
     }
 }

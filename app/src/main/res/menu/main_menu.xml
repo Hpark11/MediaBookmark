@@ -14,4 +14,9 @@
         android:title="로그아웃"
         />
 
+    <item
+        android:id="@+id/menu_new_sharegroup"
+        android:orderInCategory="100"
+        android:title="즐겨찾기 추가" />
+
 </menu>

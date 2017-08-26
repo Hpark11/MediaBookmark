@@ -11,21 +11,22 @@
         android:orientation="horizontal"
         android:layout_weight="1">
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <Button
+            android:id="@+id/eachOtherButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="TextView"
-            android:background="@drawable/follow_each_other"/>
+            android:text="서로 팔로우"
+            android:textSize="22sp" />
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <Button
+            android:id="@+id/onlyFollowedByButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:scaleType="fitXY"
-            app:srcCompat="@drawable/follow_only" />
+            android:text="상대만 팔로우"
+            android:textSize="22sp" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -34,21 +35,22 @@
         android:orientation="horizontal"
         android:layout_weight="1">
 
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <Button
+            android:id="@+id/unfollowButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:scaleType="fitXY"
-            app:srcCompat="@drawable/followed_by" />
+            android:text="나를 언팔로우"
+            android:textSize="22sp"/>
 
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <Button
+            android:id="@+id/blockmeButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:scaleType="fitXY"
-            app:srcCompat="@drawable/nothing" />
+            android:text="나를 블락한"
+            android:textSize="22sp"/>
+
     </LinearLayout>
 
 </LinearLayout>

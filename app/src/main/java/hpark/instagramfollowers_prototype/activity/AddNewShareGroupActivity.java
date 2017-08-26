@@ -9,6 +9,7 @@ import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -18,8 +19,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import hpark.instagramfollowers_prototype.R;
 import hpark.instagramfollowers_prototype.adapter.ShareGroupMemberAdapter;
 import hpark.instagramfollowers_prototype.api.HttpRequestManager;
@@ -31,7 +35,7 @@ import hpark.instagramfollowers_prototype.util.DatabaseManager;
  * Created by hpark_ipl on 2017. 8. 12..
  */
 
-public class AddNewShareGroupActivity extends AppCompatActivity {
+public class AddNewShareGroupActivity extends AppCompatActivity implements ShareGroupMemberAdapter.OnAddSharegroupMemberCheckedListener {
 
     private final static String TAG = "AddNewShareGroupActi";
 
@@ -50,8 +54,17 @@ public class AddNewShareGroupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_share_group);
 
+        ButterKnife.bind(this);
+
         instaSession = new InstaSession(this);
         databaseManager = new DatabaseManager(this);
+
+        shareGroupEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareGroupEditText.setText("");
+            }
+        });
 
         String urlFollows;
         if(instaSession.getAccessToken() != null) {
@@ -69,7 +82,6 @@ public class AddNewShareGroupActivity extends AppCompatActivity {
         public boolean handleMessage(Message msg) {
             if (msg.what == Constants.WHAT_FINALIZE) {
                 setShareGroupAdapter(usersInfo);
-                //followUsersInfoListView.setAdapter(new FollowInfoAdapter(this, usersInfo, ));
             } else if (msg.what == Constants.WHAT_ERROR) {
                 Toast.makeText(AddNewShareGroupActivity.this, "네트워크 에러", Toast.LENGTH_LONG).show();
             }
@@ -93,7 +105,7 @@ public class AddNewShareGroupActivity extends AppCompatActivity {
 
                         hashMap.put(Constants.TAG_ID, data_obj.getString(Constants.TAG_ID));
                         hashMap.put(Constants.TAG_USERNAME, data_obj.getString(Constants.TAG_USERNAME));
-
+                        hashMap.put(Constants.TAG_PROFILE_PICTURE, data_obj.getString(Constants.TAG_PROFILE_PICTURE));
                         usersInfo.add(hashMap);
                     }
                 } catch (Exception exception) {
@@ -113,7 +125,7 @@ public class AddNewShareGroupActivity extends AppCompatActivity {
                 searchedUsersInfo.add(usersInfo.get(i));
             }
         }
-        setShareGroupAdapter(usersInfo);
+        setShareGroupAdapter(searchedUsersInfo);
     }
 
     @Override
@@ -148,7 +160,7 @@ public class AddNewShareGroupActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch(id) {
             case R.id.action_sharegroup_add:
-                //addNewShareGroup()
+                addNewShareGroup();
                 break;
             default:
                 break;
@@ -157,26 +169,47 @@ public class AddNewShareGroupActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void addNewShareGroup(String name) {
+    private Set<String> usersInfoData = new HashSet<>();
+    //private String usersInfoData = "";
 
-        String usersInfoData = "";
-        for (HashMap<String, String> info : usersInfo) {
-            usersInfoData += info.get(Constants.TAG_ID) + "|";
-            usersInfoData += info.get(Constants.TAG_USERNAME) + " ";
+    private void addNewShareGroup() {
+
+        if (usersInfoData.size() == 0 || shareGroupEditText.getText().equals("")) {
+            Toast.makeText(getApplicationContext(), "즐겨찾기 이름과 구성할 인원을 추가해주세요", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String userInfoData = "";
+        for(String s: usersInfoData) {
+            userInfoData += s;
+            userInfoData += ":";
         }
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(DatabaseManager.colShareGroupName, name);
-        contentValues.put(DatabaseManager.colUsersInfo, usersInfoData);
+        contentValues.put(DatabaseManager.colShareGroupName, shareGroupEditText.getText().toString());
+        contentValues.put(DatabaseManager.colUsersInfo, userInfoData);
 
         if (databaseManager != null) {
             long id = databaseManager.insertShareGroupValue(contentValues);
 
             if(id > 0) {
-                Toast.makeText(getApplicationContext(), "userId : " + id, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "즐겨찾기 방이 추가되었습니다 " + id, Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(getApplicationContext(), "unable to Insert", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "즐겨찾기 추가 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show();
             }
+        }
+
+        finish();
+    }
+
+    @Override
+    public void onAddSharegroupMemberCheckedListener(String newMember, boolean isChecked, int pos) {
+        if (isChecked == true) {
+            usersInfoData.add(newMember);
+            usersInfo.get(pos).put("isChecked", "yes");
+        } else {
+            usersInfoData.remove(newMember);
+            usersInfo.get(pos).put("isChecked", "no");
         }
     }
 }
