@@ -5,19 +5,19 @@ package hpark.instagramfollowers_prototype.model;
  */
 
 public class ImageItem {
-    int image;
-    String imageTitle;
+    String imageUrl;
+    String imageDesc;
 
-    public int getImage() {
-        return image;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public String getImageTitle() {
-        return imageTitle;
+    public String getImageDesc() {
+        return imageDesc;
     }
 
-    public ImageItem(int image, String imageTitle) {
-        this.image=image;
-        this.imageTitle=imageTitle;
+    public ImageItem(String imageUrl, String imageDesc) {
+        this.imageUrl=imageUrl;
+        this.imageDesc=imageDesc;
     }
 }
