@@ -42,6 +42,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="0"
-            android:text="확인" />
+            android:text="확인하기" />
     </LinearLayout>
 </LinearLayout>

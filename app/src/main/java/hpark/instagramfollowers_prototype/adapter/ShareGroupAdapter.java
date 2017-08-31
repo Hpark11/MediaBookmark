@@ -44,7 +44,7 @@ public class ShareGroupAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View view = inflater.inflate(R.layout.inflator_share_group, null);
 
         final Holder holder = new Holder();
@@ -68,7 +68,7 @@ public class ShareGroupAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if (context instanceof MainInfoActivity) {
-                    ((OnCheckShareGroupDetailListener)context).onCheckShareGroupDetail(idList);
+                    ((OnCheckShareGroupDetailListener)context).onCheckShareGroupDetail(shareGroups.get(position).getShareGroupName(), idList);
                 }
             }
         });
@@ -85,6 +85,6 @@ public class ShareGroupAdapter extends BaseAdapter {
     }
 
     public interface OnCheckShareGroupDetailListener {
-        public void onCheckShareGroupDetail(ArrayList<String> idList);
+        public void onCheckShareGroupDetail(String name, ArrayList<String> idList);
     }
 }

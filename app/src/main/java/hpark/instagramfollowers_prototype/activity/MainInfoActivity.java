@@ -66,6 +66,8 @@ public class MainInfoActivity extends AppCompatActivity implements ShareGroupAda
     AdView adView;
     @BindView(R.id.shareGroupListView)
     ListView shareGroupListView;
+    @BindView(R.id.placeHolderTextView)
+    TextView placeHolderTextView;
 
     private InstaSession mSession;
     private HashMap<String, String> ownerInfo;
@@ -158,12 +160,20 @@ public class MainInfoActivity extends AppCompatActivity implements ShareGroupAda
     private void changeMode() {
         if (currentMode == MODE_MANAGE) {
             shareGroupListView.setVisibility(View.INVISIBLE);
+            placeHolderTextView.setVisibility(View.INVISIBLE);
             eachOtherButton.setVisibility(View.VISIBLE);
             onlyFollowedByButton.setVisibility(View.VISIBLE);
             unfollowedButton.setVisibility(View.VISIBLE);
             blockmeButton.setVisibility(View.VISIBLE);
         } else {
-            shareGroupListView.setVisibility(View.VISIBLE);
+            if (shareGroupItems.size() > 0) {
+                placeHolderTextView.setVisibility(View.INVISIBLE);
+                shareGroupListView.setVisibility(View.VISIBLE);
+            } else {
+                placeHolderTextView.setVisibility(View.VISIBLE);
+                shareGroupListView.setVisibility(View.INVISIBLE);
+            }
+
             eachOtherButton.setVisibility(View.INVISIBLE);
             onlyFollowedByButton.setVisibility(View.INVISIBLE);
             unfollowedButton.setVisibility(View.INVISIBLE);
@@ -173,7 +183,9 @@ public class MainInfoActivity extends AppCompatActivity implements ShareGroupAda
 
     private void loadShareGroupList() {
         shareGroupItems.clear();
-        Cursor cursor = databaseManager.queryShareGroupValues(null, null, null, DatabaseManager.colShareGroupName);
+
+        String[] selectionArgs = {ownerInfo.get(Constants.TAG_ID)};
+        Cursor cursor = databaseManager.queryShareGroupValues(null, DatabaseManager.colOwnerId+"="+ownerInfo.get(Constants.TAG_ID), null, DatabaseManager.colShareGroupName);
 
         if(cursor.moveToFirst()) {
             do  {
@@ -183,8 +195,15 @@ public class MainInfoActivity extends AppCompatActivity implements ShareGroupAda
             } while (cursor.moveToNext());
         }
 
-        shareGroupAdapter = new ShareGroupAdapter(this, shareGroupItems);
-        shareGroupListView.setAdapter(shareGroupAdapter);
+        if (shareGroupItems.size() > 0) {
+            shareGroupAdapter = new ShareGroupAdapter(this, shareGroupItems);
+            shareGroupListView.setAdapter(shareGroupAdapter);
+            shareGroupListView.setVisibility(View.VISIBLE);
+            placeHolderTextView.setVisibility(View.INVISIBLE);
+        } else {
+            placeHolderTextView.setVisibility(View.VISIBLE);
+            shareGroupListView.setVisibility(View.INVISIBLE);
+        }
     }
 
     public void refreshUserInfo() {
@@ -420,7 +439,9 @@ public class MainInfoActivity extends AppCompatActivity implements ShareGroupAda
                 }
                 break;
             case R.id.menu_new_sharegroup:
-                startActivity(new Intent(MainInfoActivity.this, AddNewShareGroupActivity.class));
+                Intent intent = new Intent(MainInfoActivity.this, AddNewShareGroupActivity.class);
+                intent.putExtra("ownerId", ownerInfo.get(Constants.TAG_ID));
+                startActivity(intent);
             default:
                 break;
         }
@@ -428,8 +449,9 @@ public class MainInfoActivity extends AppCompatActivity implements ShareGroupAda
     }
 
     @Override
-    public void onCheckShareGroupDetail(ArrayList<String> idList) {
+    public void onCheckShareGroupDetail(String name, ArrayList<String> idList) {
         Intent intent = new Intent(MainInfoActivity.this, MediaShareGroupActivity.class);
+        intent.putExtra("shareGroupName", name);
         intent.putStringArrayListExtra("idList", idList);
         startActivity(intent);
     }

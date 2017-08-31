@@ -48,11 +48,13 @@ public class AddNewShareGroupActivity extends AppCompatActivity implements Share
     private SearchView searchView;
     private InstaSession instaSession;
     private ArrayList<HashMap<String, String>> usersInfo = new ArrayList<HashMap<String, String>>();
+    private String ownerId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_share_group);
+        ownerId = getIntent().getStringExtra("ownerId");
 
         ButterKnife.bind(this);
 
@@ -188,6 +190,7 @@ public class AddNewShareGroupActivity extends AppCompatActivity implements Share
         ContentValues contentValues = new ContentValues();
         contentValues.put(DatabaseManager.colShareGroupName, shareGroupEditText.getText().toString());
         contentValues.put(DatabaseManager.colUsersInfo, userInfoData);
+        contentValues.put(DatabaseManager.colOwnerId, ownerId);
 
         if (databaseManager != null) {
             long id = databaseManager.insertShareGroupValue(contentValues);

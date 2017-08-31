@@ -24,6 +24,7 @@ public class DatabaseManager {
     // Columns
     public static final String colShareGroupName = "ShareGroupName";
     public static final String colUsersInfo = "UsersInfo";
+    public static final String colOwnerId = "colOwnerId";
     public static final String colId = "ID";
 
     // Version
@@ -31,7 +32,7 @@ public class DatabaseManager {
 
     // Table Creation
     public static final String createShareGroupTable = "Create table IF NOT EXISTS " + shareGroupTableName +
-            "(ID integer PRIMARY KEY AUTOINCREMENT," + colShareGroupName + " text," + colUsersInfo + " text);";
+            "(ID integer PRIMARY KEY AUTOINCREMENT," + colShareGroupName + " text," + colUsersInfo + " text," + colOwnerId + " text);";
 
     public DatabaseManager(Context context) {
         DatabaseManagerHelper dbHelper = new DatabaseManagerHelper(context);
@@ -79,7 +80,5 @@ public class DatabaseManager {
             db.execSQL("DROP Table IF EXISTS " + shareGroupTableName);
             onCreate(db);
         }
-
-
     }
 }

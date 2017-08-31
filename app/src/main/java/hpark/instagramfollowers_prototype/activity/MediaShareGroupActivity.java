@@ -2,6 +2,7 @@ package hpark.instagramfollowers_prototype.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,10 +12,13 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.makeramen.roundedimageview.RoundedTransformationBuilder;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -43,11 +47,9 @@ public class MediaShareGroupActivity extends AppCompatActivity {
     RecyclerView.LayoutManager layoutManager;
 
     private InstaSession mSession;
+    private String name;
     private ArrayList<String> idList;
     private ArrayList<HashMap<String, String>> imagesInfo = new ArrayList<>();
-
-    private TextView groupTitleTextView;
-    private TextView numMemberTextView;
 
     private ImageView memberImageView1;
     private ImageView memberImageView2;
@@ -55,25 +57,37 @@ public class MediaShareGroupActivity extends AppCompatActivity {
     private ImageView memberImageView4;
     private ImageView memberImageView5;
 
+    private TextView memberTextView1;
+    private TextView memberTextView2;
+    private TextView memberTextView3;
+    private TextView memberTextView4;
+    private TextView memberTextView5;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share_group);
         idList = getIntent().getStringArrayListExtra("idList");
+        name = getIntent().getStringExtra("shareGroupName");
         context = getApplicationContext();
 
         initViews();
     }
 
     private void initViews() {
-        groupTitleTextView = (TextView) findViewById(R.id.groupTitleTextView);
-        numMemberTextView = (TextView) findViewById(R.id.numMemberTextView);
+        setTitle(name + "    (총 : " + idList.size() + "명)");
 
         memberImageView1 = (ImageView) findViewById(R.id.memberImageView1);
         memberImageView2 = (ImageView) findViewById(R.id.memberImageView2);
         memberImageView3 = (ImageView) findViewById(R.id.memberImageView3);
         memberImageView4 = (ImageView) findViewById(R.id.memberImageView4);
         memberImageView5 = (ImageView) findViewById(R.id.memberImageView5);
+
+        memberTextView1 = (TextView) findViewById(R.id.memberTextView1);
+        memberTextView2 = (TextView) findViewById(R.id.memberTextView2);
+        memberTextView3 = (TextView) findViewById(R.id.memberTextView3);
+        memberTextView4 = (TextView) findViewById(R.id.memberTextView4);
+        memberTextView5 = (TextView) findViewById(R.id.memberTextView5);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -85,10 +99,9 @@ public class MediaShareGroupActivity extends AppCompatActivity {
 
         // 지정된 레이아웃매니저를 RecyclerView에 Set 해주어야한다.
         recyclerView.setLayoutManager(layoutManager);
-
         mSession = new InstaSession(this);
-
         fetchAllRecentMediaPerUser();
+        fetchAllGroupMembersImageUrl();
     }
 
     private void setUpdatedImageAdapter() {
@@ -148,13 +161,93 @@ public class MediaShareGroupActivity extends AppCompatActivity {
 
                             imagesInfo.add(hashMap);
                         }
-
                     } catch (Exception exception) {
                         exception.printStackTrace();
                         what = Constants.WHAT_ERROR;
                     }
 
                     mediaRecvHandler.sendMessage(mediaRecvHandler.obtainMessage(what, index + 1));
+                }
+            }).start();
+        }
+    }
+
+    private Handler profileImageRecvHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            if (msg.what == Constants.WHAT_FINALIZE) {
+                Transformation transformation = new RoundedTransformationBuilder().borderColor(Color.GRAY)
+                        .borderWidthDp(1).cornerRadiusDp(30).oval(false).build();
+                switch (msg.arg1) {
+                    case 0:
+                        Picasso.with(getApplicationContext()).load((String)msg.obj).transform(transformation).into(memberImageView1);
+                        break;
+                    case 1:
+                        Picasso.with(getApplicationContext()).load((String)msg.obj).transform(transformation).into(memberImageView2);
+                        break;
+                    case 2:
+                        Picasso.with(getApplicationContext()).load((String)msg.obj).transform(transformation).into(memberImageView3);
+                        break;
+                    case 3:
+                        Picasso.with(getApplicationContext()).load((String)msg.obj).transform(transformation).into(memberImageView4);
+                        break;
+                    case 4:
+                        Picasso.with(getApplicationContext()).load((String)msg.obj).transform(transformation).into(memberImageView5);
+                        break;
+                    default: break;
+                }
+            } else if (msg.what == Constants.WHAT_ERROR) {
+                Toast.makeText(MediaShareGroupActivity.this, "네트워크 에러", Toast.LENGTH_LONG).show();
+            }
+            return false;
+        }
+    });
+
+    private Handler usernameRecvHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            if (msg.what == Constants.WHAT_FINALIZE) {
+                switch (msg.arg1) {
+                    case 0: memberTextView1.setText((String)msg.obj); break;
+                    case 1: memberTextView2.setText((String)msg.obj); break;
+                    case 2: memberTextView3.setText((String)msg.obj); break;
+                    case 3: memberTextView4.setText((String)msg.obj); break;
+                    case 4: memberTextView5.setText((String)msg.obj); break;
+                    default: break;
+                }
+            } else if (msg.what == Constants.WHAT_ERROR) {
+                Toast.makeText(MediaShareGroupActivity.this, "네트워크 에러", Toast.LENGTH_LONG).show();
+            }
+            return false;
+        }
+    });
+
+    private void fetchAllGroupMembersImageUrl() {
+        final String url = "https://api.instagram.com/v1/users/{user-id}/?access_token=" + mSession.getAccessToken();
+
+        for (int i = 0; i < idList.size(); i++) {
+            final int index = i;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    int what = Constants.WHAT_FINALIZE;
+                    String urlString = "";
+                    String username = "";
+                    try {
+                        HttpRequestManager httpRequestManager = new HttpRequestManager();
+                        String reqUrl = url.replace("{user-id}", idList.get(index));
+                        JSONObject jsonObject = httpRequestManager.acquireJsonwithGetRequest(reqUrl);
+                        JSONObject data = jsonObject.getJSONObject(Constants.TAG_DATA);
+                        urlString = data.getString(Constants.TAG_PROFILE_PICTURE);
+                        username = data.getString(Constants.TAG_USERNAME);
+
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                        what = Constants.WHAT_ERROR;
+                    }
+
+                    profileImageRecvHandler.sendMessage(profileImageRecvHandler.obtainMessage(what, index, 0, urlString));
+                    usernameRecvHandler.sendMessage(usernameRecvHandler.obtainMessage(what, index, 0, username));
                 }
             }).start();
         }
@@ -231,6 +324,4 @@ public class MediaShareGroupActivity extends AppCompatActivity {
             return ((Integer)lhs).compareTo(rhs);
         }
     }
-
-
 }
