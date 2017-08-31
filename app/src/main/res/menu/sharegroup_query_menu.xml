@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activity.MediaShareGroupActivity">
+    <item
+        android:id="@+id/queryByNewest"
+        android:orderInCategory="100"
+        android:title="최신 순"
+        />
+
+    <item
+        android:id="@+id/queryByLatest"
+        android:orderInCategory="100"
+        android:title="최초 순"
+        />
+
+    <item
+        android:id="@+id/queryByLikes"
+        android:orderInCategory="100"
+        android:title="좋아요 순"
+        />
+
+    <item
+        android:id="@+id/queryByComments"
+        android:orderInCategory="100"
+        android:title="코멘트 순" />
+
+</menu>

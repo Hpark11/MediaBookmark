@@ -30,6 +30,10 @@ public class Constants {
     public static final String TAG_CODE = "code";
     public static final String TAG_IMAGES = "images";
     public static final String TAG_IMAGE_STANDARD = "standard_resolution";
+    public static final String TAG_CREATED_TIME = "created_time";
+    public static final String TAG_COMMENTS = "comments";
+    public static final String TAG_LIKES = "likes";
+
 
     public static final String TAG_SHARE_GROUP_NAME = "share_group_name";
     public static final String TAG_SHARE_GROUP_PICTURE = "share_group_picture";

@@ -296,7 +296,6 @@ public class MainInfoActivity extends AppCompatActivity implements ShareGroupAda
             progressDone++;
 
             if (what == Constants.WHAT_FINALIZE) {
-
                 if(identifier == FOLLOWS) {
                     for (int i = 0; i < msgData.length; i++) {
                         switch (msgData[i]) {

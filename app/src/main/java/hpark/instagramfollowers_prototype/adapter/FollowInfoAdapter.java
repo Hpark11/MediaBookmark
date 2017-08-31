@@ -109,16 +109,8 @@ public class FollowInfoAdapter extends BaseAdapter {
 
         holder.userIdTextView.setText(usersInfo.get(position).get(Constants.TAG_USERNAME));
 
-//        Transformation transformation = new RoundedTransformationBuilder()
-//                .borderColor(Color.GRAY)
-//                .borderWidthDp(1)
-//                .cornerRadiusDp(30)
-//                .oval(false)
-//                .build();
-
         Picasso.with(mContext).load(usersInfo.get(position).get(Constants.TAG_PROFILE_PICTURE))
                 .placeholder(R.drawable.placeholder)
-                //.transform(transformation)
                 .into(holder.userImageView);
         return view;
     }

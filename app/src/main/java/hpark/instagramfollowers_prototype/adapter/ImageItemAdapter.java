@@ -62,6 +62,11 @@ public class ImageItemAdapter extends RecyclerView.Adapter<ImageItemAdapter.View
         });
     }
 
+    public void updateDataSet(List<ImageItem> items) {
+        this.items = items;
+        this.notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
         return this.items.size();
