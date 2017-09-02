@@ -153,6 +153,7 @@ public class InstagramLoginActivity extends AppCompatActivity {
         webView.setHorizontalScrollBarEnabled(false);
         webView.setWebViewClient(new OAuthWebViewClient());
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         webView.loadUrl(mAuthUrl);
         addContentView(webView, matchParent);
     }

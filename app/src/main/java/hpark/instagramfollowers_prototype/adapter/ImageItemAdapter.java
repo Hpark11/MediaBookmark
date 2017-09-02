@@ -1,6 +1,7 @@
 package hpark.instagramfollowers_prototype.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
@@ -14,12 +15,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.orhanobut.dialogplus.DialogPlus;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import hpark.instagramfollowers_prototype.R;
+import hpark.instagramfollowers_prototype.activity.MediaShareGroupActivity;
 import hpark.instagramfollowers_prototype.model.ImageItem;
 import hpark.instagramfollowers_prototype.util.Constants;
 
@@ -33,10 +36,13 @@ public class ImageItemAdapter extends RecyclerView.Adapter<ImageItemAdapter.View
     List<ImageItem> items;
     int item_layout;
 
+
     public ImageItemAdapter(Context context, List<ImageItem> items, int item_layout) {
         this.context = context;
         this.items = items;
         this.item_layout = item_layout;
+
+
     }
 
     @Override
@@ -58,6 +64,10 @@ public class ImageItemAdapter extends RecyclerView.Adapter<ImageItemAdapter.View
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
+                DialogPlus dialog = DialogPlus.newDialog(context)
+                        .setExpanded(true)  // This will enable the expand feature, (similar to android L share dialog)
+                        .create();
+                dialog.show();
             }
         });
     }
@@ -84,4 +94,5 @@ public class ImageItemAdapter extends RecyclerView.Adapter<ImageItemAdapter.View
             cardview = (CardView) itemView.findViewById(R.id.cardview);
         }
     }
+
 }

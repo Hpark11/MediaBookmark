@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
+import com.orhanobut.dialogplus.DialogPlus;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
@@ -39,7 +40,7 @@ import hpark.instagramfollowers_prototype.util.DatabaseManager;
 /**
  * Created by hpark_ipl on 2017. 8. 12..
  */
-public class MediaShareGroupActivity extends AppCompatActivity {
+public class MediaShareGroupActivity extends AppCompatActivity  {
     private final static String TAG = "MediaShareGroupActivity";
 
     Context context;
@@ -110,15 +111,25 @@ public class MediaShareGroupActivity extends AppCompatActivity {
         fetchAllGroupMembersImageUrl();
     }
 
+    private String getEmojiByUnicode(int unicode){
+        return new String(Character.toChars(unicode));
+    }
+
     private void setUpdatedImageAdapter() {
+        int likesUnicode = 0x1F49C;
+        int commentUnicode = 0x1F4AC;
+
+        String likes = getEmojiByUnicode(likesUnicode);
+        String comments = getEmojiByUnicode(commentUnicode);
+
         ArrayList items = new ArrayList<>();
         for(HashMap<String, String> hashMap: imagesInfo) {
-            items.add(new ImageItem(hashMap.get(Constants.TAG_IMAGE_STANDARD), hashMap.get(Constants.TAG_USERNAME)));
+            items.add(new ImageItem(hashMap.get(Constants.TAG_IMAGE_STANDARD), likes + ": " + hashMap.get(Constants.TAG_LIKES)+"    " + comments + ": " + hashMap.get(Constants.TAG_COMMENTS)));
         }
         if (Adapter != null) {
             ((ImageItemAdapter)Adapter).updateDataSet(items);
         } else {
-            Adapter = new ImageItemAdapter(getApplicationContext(), items, R.layout.activity_share_group);
+            Adapter = new ImageItemAdapter(this, items, R.layout.activity_share_group);
             recyclerView.setAdapter(Adapter);
         }
     }
@@ -326,7 +337,7 @@ public class MediaShareGroupActivity extends AppCompatActivity {
         public int compare(HashMap<String, String> o1, HashMap<String, String> o2) {
             int lhs = Integer.parseInt(o1.get(Constants.TAG_LIKES));
             int rhs = Integer.parseInt(o2.get(Constants.TAG_LIKES));
-            return ((Integer)lhs).compareTo(rhs);
+            return ((Integer)rhs).compareTo(lhs);
         }
     }
 
@@ -335,7 +346,8 @@ public class MediaShareGroupActivity extends AppCompatActivity {
         public int compare(HashMap<String, String> o1, HashMap<String, String> o2) {
             int lhs = Integer.parseInt(o1.get(Constants.TAG_COMMENTS));
             int rhs = Integer.parseInt(o2.get(Constants.TAG_COMMENTS));
-            return ((Integer)lhs).compareTo(rhs);
+            return ((Integer)rhs).compareTo(lhs);
         }
     }
+
 }
