@@ -449,10 +449,11 @@ public class MainInfoActivity extends AppCompatActivity implements ShareGroupAda
     }
 
     @Override
-    public void onCheckShareGroupDetail(String name, ArrayList<String> idList) {
+    public void onCheckShareGroupDetail(String name, ArrayList<String> idList, String id) {
         Intent intent = new Intent(MainInfoActivity.this, MediaShareGroupActivity.class);
         intent.putExtra("shareGroupName", name);
         intent.putStringArrayListExtra("idList", idList);
+        intent.putExtra("id", id);
         startActivity(intent);
     }
 }

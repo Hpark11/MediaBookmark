@@ -196,9 +196,9 @@ public class AddNewShareGroupActivity extends AppCompatActivity implements Share
             long id = databaseManager.insertShareGroupValue(contentValues);
 
             if(id > 0) {
-                Toast.makeText(getApplicationContext(), "즐겨찾기 방이 추가되었습니다 " + id, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "즐겨찾기 방이 추가되었습니다", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(getApplicationContext(), "즐겨찾기 추가 중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "즐겨찾기 추가 중 오류가 발생했습니다", Toast.LENGTH_SHORT).show();
             }
         }
 

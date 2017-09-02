@@ -34,6 +34,7 @@ import hpark.instagramfollowers_prototype.api.HttpRequestManager;
 import hpark.instagramfollowers_prototype.api.InstaSession;
 import hpark.instagramfollowers_prototype.model.ImageItem;
 import hpark.instagramfollowers_prototype.util.Constants;
+import hpark.instagramfollowers_prototype.util.DatabaseManager;
 
 /**
  * Created by hpark_ipl on 2017. 8. 12..
@@ -48,6 +49,7 @@ public class MediaShareGroupActivity extends AppCompatActivity {
 
     private InstaSession mSession;
     private String name;
+    private String id;
     private ArrayList<String> idList;
     private ArrayList<HashMap<String, String>> imagesInfo = new ArrayList<>();
 
@@ -63,6 +65,8 @@ public class MediaShareGroupActivity extends AppCompatActivity {
     private TextView memberTextView4;
     private TextView memberTextView5;
 
+    private DatabaseManager databaseManager;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,8 +74,10 @@ public class MediaShareGroupActivity extends AppCompatActivity {
         idList = getIntent().getStringArrayListExtra("idList");
         name = getIntent().getStringExtra("shareGroupName");
         context = getApplicationContext();
+        id = getIntent().getStringExtra("id");
 
         initViews();
+        databaseManager = new DatabaseManager(this);
     }
 
     private void initViews() {
@@ -253,6 +259,12 @@ public class MediaShareGroupActivity extends AppCompatActivity {
         }
     }
 
+    private void deleteCurrentBookmark() {
+        databaseManager.deleteShareGroupValues(DatabaseManager.colId+"="+ id, null);
+        Toast.makeText(getApplicationContext(), "성공적으로 현재 북마킹이 제거되었습니다.", Toast.LENGTH_LONG).show();
+        finish();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.sharegroup_query_menu, menu);
@@ -266,6 +278,8 @@ public class MediaShareGroupActivity extends AppCompatActivity {
 
         int id = item.getItemId();
         switch(id) {
+            case R.id.deleteBookmark:
+                deleteCurrentBookmark();
             case R.id.queryByNewest:
                 QueryByNewest queryByNewest = new QueryByNewest();
                 Collections.sort(imagesInfo, queryByNewest);

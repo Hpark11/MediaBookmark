@@ -68,7 +68,9 @@ public class ShareGroupAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if (context instanceof MainInfoActivity) {
-                    ((OnCheckShareGroupDetailListener)context).onCheckShareGroupDetail(shareGroups.get(position).getShareGroupName(), idList);
+                    ((OnCheckShareGroupDetailListener)context)
+                            .onCheckShareGroupDetail(shareGroups.get(position).getShareGroupName(),
+                                    idList, String.valueOf(shareGroups.get(position).getShareGroupId()));
                 }
             }
         });
@@ -85,6 +87,6 @@ public class ShareGroupAdapter extends BaseAdapter {
     }
 
     public interface OnCheckShareGroupDetailListener {
-        public void onCheckShareGroupDetail(String name, ArrayList<String> idList);
+        public void onCheckShareGroupDetail(String name, ArrayList<String> idList, String id);
     }
 }
