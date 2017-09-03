@@ -1,29 +1,55 @@
 package hpark.instagramfollowers_prototype.activity;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.orhanobut.dialogplus.DialogPlus;
+import com.orhanobut.dialogplus.Holder;
+import com.orhanobut.dialogplus.OnClickListener;
+import com.orhanobut.dialogplus.ViewHolder;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 import com.squareup.picasso.Transformation;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -40,7 +66,7 @@ import hpark.instagramfollowers_prototype.util.DatabaseManager;
 /**
  * Created by hpark_ipl on 2017. 8. 12..
  */
-public class MediaShareGroupActivity extends AppCompatActivity  {
+public class MediaShareGroupActivity extends AppCompatActivity implements ImageItemAdapter.OnImageExpandListener {
     private final static String TAG = "MediaShareGroupActivity";
 
     Context context;
@@ -52,6 +78,7 @@ public class MediaShareGroupActivity extends AppCompatActivity  {
     private String name;
     private String id;
     private ArrayList<String> idList;
+    private ArrayList<HashMap<String, String>> storage = new ArrayList<>();
     private ArrayList<HashMap<String, String>> imagesInfo = new ArrayList<>();
 
     private ImageView memberImageView1;
@@ -79,6 +106,8 @@ public class MediaShareGroupActivity extends AppCompatActivity  {
 
         initViews();
         databaseManager = new DatabaseManager(this);
+
+        verifyExternalStoragePermission();
     }
 
     private void initViews() {
@@ -123,6 +152,8 @@ public class MediaShareGroupActivity extends AppCompatActivity  {
         String comments = getEmojiByUnicode(commentUnicode);
 
         ArrayList items = new ArrayList<>();
+
+        imagesInfo = storage;
         for(HashMap<String, String> hashMap: imagesInfo) {
             items.add(new ImageItem(hashMap.get(Constants.TAG_IMAGE_STANDARD), likes + ": " + hashMap.get(Constants.TAG_LIKES)+"    " + comments + ": " + hashMap.get(Constants.TAG_COMMENTS)));
         }
@@ -176,7 +207,7 @@ public class MediaShareGroupActivity extends AppCompatActivity  {
                             hashMap.put(Constants.TAG_COMMENTS, comments.getString("count"));
                             hashMap.put(Constants.TAG_LIKES, likes.getString("count"));
 
-                            imagesInfo.add(hashMap);
+                            storage.add(hashMap);
                         }
                     } catch (Exception exception) {
                         exception.printStackTrace();
@@ -196,20 +227,15 @@ public class MediaShareGroupActivity extends AppCompatActivity  {
                 Transformation transformation = new RoundedTransformationBuilder().borderColor(Color.GRAY)
                         .borderWidthDp(1).cornerRadiusDp(30).oval(false).build();
                 switch (msg.arg1) {
-                    case 0:
-                        Picasso.with(getApplicationContext()).load((String)msg.obj).transform(transformation).into(memberImageView1);
+                    case 0: Picasso.with(getApplicationContext()).load((String)msg.obj).transform(transformation).into(memberImageView1);
                         break;
-                    case 1:
-                        Picasso.with(getApplicationContext()).load((String)msg.obj).transform(transformation).into(memberImageView2);
+                    case 1: Picasso.with(getApplicationContext()).load((String)msg.obj).transform(transformation).into(memberImageView2);
                         break;
-                    case 2:
-                        Picasso.with(getApplicationContext()).load((String)msg.obj).transform(transformation).into(memberImageView3);
+                    case 2: Picasso.with(getApplicationContext()).load((String)msg.obj).transform(transformation).into(memberImageView3);
                         break;
-                    case 3:
-                        Picasso.with(getApplicationContext()).load((String)msg.obj).transform(transformation).into(memberImageView4);
+                    case 3: Picasso.with(getApplicationContext()).load((String)msg.obj).transform(transformation).into(memberImageView4);
                         break;
-                    case 4:
-                        Picasso.with(getApplicationContext()).load((String)msg.obj).transform(transformation).into(memberImageView5);
+                    case 4: Picasso.with(getApplicationContext()).load((String)msg.obj).transform(transformation).into(memberImageView5);
                         break;
                     default: break;
                 }
@@ -350,4 +376,136 @@ public class MediaShareGroupActivity extends AppCompatActivity  {
         }
     }
 
+    private String imageUrlForShare = "";
+
+    private void selectWhereToShare() {
+        Target target = new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                String path = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "SomeText", null);
+                Log.d("Path", path);
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_TEXT, "Media Share");
+                Uri screenshotUri = Uri.parse(path);
+                intent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
+                intent.setType("image/*");
+                startActivity(Intent.createChooser(intent, "Share image via..."));
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+        };
+        Picasso.with(getApplicationContext()).load(imageUrlForShare).into(target);
+
+    }
+
+    private OnClickListener onClickListener = new OnClickListener() {
+        @Override
+        public void onClick(DialogPlus dialog, View view) {
+            switch (view.getId()) {
+              case R.id.shareCancelButton: break;
+              case R.id.shareConfirmButton:
+                  selectWhereToShare();
+                break;
+            }
+            dialog.dismiss();
+        }
+    };
+
+    @Override
+    public void onImageExpand(String imageUrl) {
+        imageUrlForShare = imageUrl;
+        Holder holder = new ImageShareViewHolder(R.layout.dialog_popup_image, imageUrl);
+
+        final DialogPlus dialog = DialogPlus.newDialog(this)
+                .setContentHolder(holder)
+                .setHeader(R.layout.dialog_header)
+                .setCancelable(true)
+                .setGravity(Gravity.BOTTOM)
+                .setOnClickListener(onClickListener)
+                .create();
+        dialog.show();
+    }
+
+    private class ImageShareViewHolder extends ViewHolder {
+        String imageUrl = "";
+        ImageView imageView;
+
+        public ImageShareViewHolder(int viewResourceId, String imageUrl) {
+            super(viewResourceId);
+            this.imageUrl = imageUrl;
+        }
+
+        @Override
+        public View getView(LayoutInflater inflater, ViewGroup parent) {
+            View v = super.getView(inflater, parent);
+            imageView = (ImageView) v.findViewById(R.id.expandedImageView);
+
+            Picasso.with(context).load(imageUrl)
+                    .placeholder(R.drawable.placeholder)
+                    .into(imageView);
+            return v;
+        }
+    }
+
+    private static final int RECORD_REQUEST_CODE = 101;
+    protected boolean isExternalStorageAllowed = false;
+
+    private void showAskingPermissionDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("").setTitle("");
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                makeRequest();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void verifyExternalStoragePermission() {
+        int permission;
+        if(Build.VERSION.SDK_INT >= 23) {
+            permission = this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            if(permission != PackageManager.PERMISSION_GRANTED) {
+                if(this.shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    showAskingPermissionDialog();
+                } else makeRequest();
+            } else isExternalStorageAllowed = true;
+        } else {
+            permission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            if(permission != PackageManager.PERMISSION_GRANTED) {
+                if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    showAskingPermissionDialog();
+                } else makeRequest();
+            } else isExternalStorageAllowed = true;
+        }
+    }
+
+    private void makeRequest() {
+        if(Build.VERSION.SDK_INT >= 23) {
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RECORD_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case RECORD_REQUEST_CODE: {
+                if(grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    isExternalStorageAllowed = true;
+                }
+            }
+            break;
+            default: break;
+        }
+    }
 }
