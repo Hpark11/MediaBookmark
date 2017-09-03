@@ -129,7 +129,7 @@ public class MediaShareGroupActivity extends AppCompatActivity implements ImageI
         recyclerView.setHasFixedSize(true);
 
         // StaggeredGrid 레이아웃을 사용한다
-        layoutManager = new StaggeredGridLayoutManager(3,StaggeredGridLayoutManager.VERTICAL);
+        layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         //layoutManager = new LinearLayoutManager(this);
         //layoutManager = new GridLayoutManager(this,3);
 

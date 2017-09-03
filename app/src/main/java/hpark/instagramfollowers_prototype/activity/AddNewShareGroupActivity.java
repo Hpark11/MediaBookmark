@@ -172,7 +172,6 @@ public class AddNewShareGroupActivity extends AppCompatActivity implements Share
     }
 
     private Set<String> usersInfoData = new HashSet<>();
-    //private String usersInfoData = "";
 
     private void addNewShareGroup() {
 
